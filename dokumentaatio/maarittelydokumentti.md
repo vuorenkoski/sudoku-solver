@@ -14,7 +14,7 @@ Algoritmin käytännön nopeus riippuu käytännössä tyhjien solujen määrän
 
 Raakaa laskentavoimaa käyttävän algoritmin lisäksi toteutetaan **Kehittyneempi algoritmi**. Tämä algoritmi rakennetaan päättelymenetelmistä, joita ihminenkin käyttäisi sudokujen ratkaisemiseen (kts. Tips on Solving Sudoku Puzzles). Tuolla sivuilla kuvatuista menetelmistä toteutaan niin moni, kuin on tarvetta. Toki voi olla että vaikeampien suodukujen osalta loppuratkaisuun tarvitaan vielä brute-force algoritmia, mutta tavoitteena on että tätä ei tarvita. 
 
-Toinen vaihtoehto olisi käsitellä sudokua Exact cover -ongelmana. Ja sitten käyttää Knuth's
+Toinen vaihtoehto olisi käsitellä sudokua [Exact cover](https://en.wikipedia.org/wiki/Exact_cover) -ongelmana ja käyttää algoritmia [Knuth's Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X). Vaatii vielä selvitystyötä, jota en ehdi tehdä ennen ensimmäistä viikkopalautusta, mutta todennäköisesti kehittyneempi algoritmi toteutetaan kuitenkin tällä.
 
 **Tietorakenteeksi** luodaan oma Ruudukko-luokka, joka sisältää 81 int tyyppistä kokonaislukua. Luokka kuvaa sudoku-ruudukkoa. Luokka sisältää tiedon jokaisen ruudun kohdalta onko se alunperin tyhjä. 
 
@@ -51,5 +51,6 @@ Ohjelman tilavaativuus lienee pieni. Kun tyhjien solujen määrä on n, niin keh
 * [Wikipedia: Sudoku solving algorithms](https://en.wikipedia.org/wiki/Sudoku_solving_algorithms)
 * [Tips on Solving Sudoku Puzzles](https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php)
 * [Solving sudoku](http://www.angusj.com/sudoku/hints.php)
-* [Exact cover](https://en.wikipedia.org/wiki/Exact_cover)
+* [Wikipideia: Exact cover](https://en.wikipedia.org/wiki/Exact_cover)
+* [Wikipedia: Knuth's Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X)
 * [World's hardest sudoku: can you crack it?](https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html)
