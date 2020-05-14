@@ -18,7 +18,7 @@ Toinen vaihtoehto olisi käsitellä sudokua Täsmällinen peite -ongelmana ([Exa
 
 **Tietorakenteeksi** luodaan oma Ruudukko-luokka, joka sisältää 81 int tyyppistä kokonaislukua. Luokka kuvaa sudoku-ruudukkoa. Luokka sisältää tiedon jokaisen ruudun kohdalta onko se alunperin tyhjä. 
 
-Lisäksi kehittyneempään algoritmia varten tarvitaan tietorakenne tyhjien ruutujen mahdollisille vaihtoehdoille. Voi olla että tarvitaan vielä jotakin rivi,sarake ja ryhmäkohtaisia tietorakenteita.
+Lisäksi kehittyneempään algoritmia varten tarvitaaneen muitakin tietorakenteita. 
 
 ## Ratkaistava ongelma ja perustelut algoritmeille
 Ongelmana on Sudokun ratkaiseminen mahdollisimman nopeasti. Brute-Force algoritmi toimii vertailukohtana kehittyneemmälle algoritmille. 
