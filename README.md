@@ -5,4 +5,4 @@ Tira-labran harjoitustyö
 * [Viikko 1](dokumentaatio/viikkoraportti1.md)
 
 ## dokumentaatio
-* [Maarittelydokumentti](dokumentaatio/Maarittelydokumentti.md)
+* [Määrittelydokumentti](dokumentaatio/maarittelydokumentti.md)
