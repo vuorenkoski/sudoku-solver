@@ -20,4 +20,4 @@ Netbeans projkti luotu. Muuten ohjelma ei edistynyt.
 * Aloitetaan kodaan brute-force algoritmia
 
 ## Tuntikirjanpito
-* 14.5. 4 tuntia
+* 14.5: 4 tuntia
