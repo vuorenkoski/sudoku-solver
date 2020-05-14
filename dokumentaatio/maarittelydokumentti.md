@@ -14,6 +14,8 @@ Algoritmin käytännön nopeus riippuu käytännössä tyhjien solujen määrän
 
 Raakaa laskentavoimaa käyttävän algoritmin lisäksi toteutetaan **Kehittyneempi algoritmi**. Tämä algoritmi rakennetaan päättelymenetelmistä, joita ihminenkin käyttäisi sudokujen ratkaisemiseen (kts. Tips on Solving Sudoku Puzzles). Tuolla sivuilla kuvatuista menetelmistä toteutaan niin moni, kuin on tarvetta. Toki voi olla että vaikeampien suodukujen osalta loppuratkaisuun tarvitaan vielä brute-force algoritmia, mutta tavoitteena on että tätä ei tarvita. 
 
+Toinen vaihtoehto olisi käsitellä sudokua Exact cover -ongelmana. Ja sitten käyttää Knuth's
+
 **Tietorakenteeksi** luodaan oma Ruudukko-luokka, joka sisältää 81 int tyyppistä kokonaislukua. Luokka kuvaa sudoku-ruudukkoa. Luokka sisältää tiedon jokaisen ruudun kohdalta onko se alunperin tyhjä. 
 
 Lisäksi kehittyneempään algoritmia varten tarvitaan tietorakenne tyhjien ruutujen mahdollisille vaihtoehdoille. Voi olla että tarvitaan vielä jotakin rivi,sarake ja ryhmäkohtaisia tietorakenteita.
@@ -36,16 +38,18 @@ Ohjelmaan syötetään sudokuja tekstitiedostona. Tiedosto voi sisältää yhden
     ...!21.!97.
     ..1!.6.!...
 
+Mikäli tiedosto sisältää useamman sudokun, on ne erotettu tyhjällä rivillä.
+
 Ohjelma tulostaa jokaisen sudokun kohdalta ratkaisun, sekä kummankin algoritmin käyteytyn ajan. Ohjelma kertoo myös tulosteessa mikäli algoritmi ei pystynyt ratkaisemaan sudokua.
 
 Testidataa löytyy [Kjell Ericsonin sivuilta](https://kjell.haxx.se/sudoku/).
 
 ## Tavoitteena olevat aika- ja tilavaativuudet
-Ohjelman tilavaativuus lienee pieni. Kun tyhjien solujen määrä on n, niin kehittyneemmän algoritmin tavoitteena pitänee pitää O(n) tasoa.
+Ohjelman tilavaativuus lienee pieni. Kun tyhjien solujen määrä on n, niin kehittyneemmän algoritmin tavoitteena pitänee pitää O(n) tasoa (lieneekö mahdollista?).
 
 ## Lähteet
 * [Wikipedia: Sudoku solving algorithms](https://en.wikipedia.org/wiki/Sudoku_solving_algorithms)
 * [Tips on Solving Sudoku Puzzles](https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php)
 * [Solving sudoku](http://www.angusj.com/sudoku/hints.php)
-
-https://kjell.haxx.se/sudoku/
+* [Exact cover](https://en.wikipedia.org/wiki/Exact_cover)
+* [World's hardest sudoku: can you crack it?](https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html)

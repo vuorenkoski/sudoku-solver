@@ -8,16 +8,19 @@
 * Määrittelydokumentin kirjoittaminen
 
 ## Ohjelman edistyminen
-Netbeans projkti luotu. Muuten ohjelma ei edistynyt.
+Netbeans projekti luotu, mutta ohjelman kirjoittamista ei ole vielä aloitettu.
 
 ## Mitä opin
 * Sudokun ratkaisun periaatteita
+* Ehkä jotakin Exact cover -ongelmista
 
 ## Epäselvää
+Tehokkaan algoritmin toteutus. Tulisiko lähteä yrittämään Exact cover tyyppistä algoritmia, vai matkia ihmisen käyttämää deduktiota?
 
 ## Seuraavat tehtävät
 * Tekstikäyttöliittymä
 * Aloitetaan kodaan brute-force algoritmia
+* Lisää tutustumista Exact cover ongelmiin ja niiden ratkaisuihin
 
 ## Tuntikirjanpito
-* 14.5: 4 tuntia
+* 14.5: 5 tuntia
