@@ -27,14 +27,14 @@ public class SudokuUnitTest {
 
     @Test
     public void GridSetOk() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         grid.setCell(5, 6, 7);
         assertEquals(7, grid.getCell(5, 6));
     }
     
     @Test
     public void GridInsertOk() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         Scanner fileReader = new Scanner(new File("src/test/testLevel22.ss"));
         String[] lines = new String[11];
         for (int i = 0; i < 11; i++) {
@@ -47,7 +47,7 @@ public class SudokuUnitTest {
 
     @Test
     public void GridEmptyCellsOk() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         Scanner fileReader = new Scanner(new File("src/test/testLevel22.ss"));
         String[] lines = new String[11];
         for (int i = 0; i < 11; i++) {
@@ -62,7 +62,7 @@ public class SudokuUnitTest {
 
     @Test
     public void GridCheckCellOk() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         Scanner fileReader = new Scanner(new File("src/test/testLevel22.ss"));
         String[] lines = new String[11];
         for (int i = 0; i < 11; i++) {
@@ -76,7 +76,7 @@ public class SudokuUnitTest {
     
     @Test
     public void BruteForceOk() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         Scanner fileReader = new Scanner(new File("src/test/testLevel22.ss"));
         String[] lines = new String[11];
         for (int i = 0; i < 11; i++) {
@@ -86,7 +86,7 @@ public class SudokuUnitTest {
         grid.insertData(lines);
         BruteForce.solve(grid);
         
-        Grid grid2 = new Grid();
+        Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel22_complete.ss"));
         for (int i = 0; i < 11; i++) {
             lines[i]=fileReader.nextLine();
@@ -97,7 +97,7 @@ public class SudokuUnitTest {
     
     @Test
     public void BruteForceImpossible() throws FileNotFoundException {
-        Grid grid = new Grid();
+        Grid grid = new Grid(3);
         Scanner fileReader = new Scanner(new File("src/test/testLevel22_mahdoton.ss"));
         String[] lines = new String[11];
         for (int i = 0; i < 11; i++) {
@@ -107,7 +107,7 @@ public class SudokuUnitTest {
         grid.insertData(lines);
         BruteForce.solve(grid);
         
-        Grid grid2 = new Grid();
+        Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel22_complete.ss"));
         for (int i = 0; i < 11; i++) {
             lines[i]=fileReader.nextLine();

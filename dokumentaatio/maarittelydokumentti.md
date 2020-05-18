@@ -1,6 +1,6 @@
 # Määrittelydokumentti - Sudoku-solver
 
-Tämä on Tira-labran (alkukesä 2020) harjoitustyö. Ohjelma ratkaisee sudokuja.
+Tämä on Tira-labran (alkukesä 2020) harjoitustyö. Ohjelma ratkaisee sudokuja. Sudokujen mahdolliset koot: 9x9, 16x16 ja 25x25.
 
 ## Toteutettavat algoritmit ja tietorakenteet
 
@@ -24,7 +24,7 @@ Lisäksi kehittyneempään algoritmia varten tarvitaaneen muitakin tietorakentei
 Ongelmana on Sudokun ratkaiseminen mahdollisimman nopeasti. Brute-Force algoritmi toimii vertailukohtana kehittyneemmälle algoritmille. 
 
 ## Ohjelman syötteet ja niiden käyttö
-Ohjelmaan syötetään sudokuja tekstitiedostona. Tiedosto voi sisältää yhden tai useamman sudokun. Tiedostomuoto:
+Ohjelmaan syötetään sudokuja tekstitiedostona. Tiedosto voi sisältää yhden tai useamman sudokun. Sudokun muoto:
 
     .47!9..!6.5
     81.!.75!24.
@@ -38,7 +38,7 @@ Ohjelmaan syötetään sudokuja tekstitiedostona. Tiedosto voi sisältää yhden
     ...!21.!97.
     ..1!.6.!...
 
-Mikäli tiedosto sisältää useamman sudokun, on ne erotettu tyhjällä rivillä.
+Tiedoston ensimmäisellä rivillä on numero, joka kertoo sudokujen koon (3=9x9, 4=16x16, 5=25x25). Mikäli tiedosto sisältää useamman sudokun, on ne erotettu tyhjällä rivillä.
 
 Ohjelma tulostaa jokaisen sudokun kohdalta ratkaisun, sekä kummankin algoritmin käyteytyn ajan. Ohjelma kertoo myös tulosteessa mikäli algoritmi ei pystynyt ratkaisemaan sudokua.
 

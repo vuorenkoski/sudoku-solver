@@ -28,26 +28,34 @@ public class Main {
             String line;
             int count = 0;
             double sumBrute = 0;
+            int size = Integer.valueOf(fileReader.nextLine());
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
                 if (!line.isEmpty()) {
-                    String[] lines = new String[11];
+                    String[] lines = new String[size * size + size - 1];
                     lines[0] = line;
-                    for (int i = 1; i < 11; i++) {
+                    for (int i = 1; i < size * size + size - 1; i++) {
                         line = fileReader.nextLine();
                         lines[i] = line;
                     }
-                    Grid grid = new Grid();
+                    Grid grid = new Grid(size);
                     grid.insertData(lines);
                     count++;
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
+                    System.out.println(grid);
                     sumBrute += BruteForce.solve(grid);
+                    System.out.println(grid);
                     System.out.println("");
                 }
             }
             fileReader.close();
-            System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(sumBrute / count));
+            double average = sumBrute / count;
+            if (average < 1000) {
+                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(average) + " ms");
+            } else {
+                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(average / 1000) + " sekuntia");
+            }
         } catch (FileNotFoundException ex) {
             System.out.println("Tiedostoa ei löytynyt: " + fileName);
         }

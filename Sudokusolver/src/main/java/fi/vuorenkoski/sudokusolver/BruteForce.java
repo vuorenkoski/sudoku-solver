@@ -17,7 +17,7 @@ public class BruteForce {
      */
     public static double solve(Grid grid) {
         int empty = grid.numberOfEmptyCells();
-        System.out.println("Algoritmi: Brute-force\n Tyhjiä ruutuja: " + empty);
+        System.out.println("Algoritmi: Brute-force\n  Tyhjiä ruutuja: " + empty);
         double time = (double) System.nanoTime() / 1000000;
         if (next(grid, 1, 1)) {
             System.out.println("  Vastaus löytyi");
@@ -25,7 +25,11 @@ public class BruteForce {
             System.out.println("  Vastausta ei löytynyt");
         }
         time = (double) System.nanoTime() / 1000000 - time;
-        System.out.println("  Aika (ms):" + DF3.format(time));
+        if (time < 1000) { 
+            System.out.println("  Aika (ms):" + DF3.format(time));
+        } else {
+            System.out.println("  Aika (sekuntia):" + DF3.format(time / 1000));
+        }
         return time;
     }
     
@@ -35,12 +39,12 @@ public class BruteForce {
         }
         while (grid.getCell(x, y) != 0) {
             x++;
-            if (x == 10) {
+            if (x == grid.getGridSize() + 1) {
                 x = 1;
                 y++;
             }
         }
-        for (int i = 1; i <= 9; i++) {
+        for (int i = 1; i <= grid.getGridSize(); i++) {
             grid.setCell(x, y, i);
             if (grid.checkCell(x, y) && next(grid, x, y)) {
                 return true;
