@@ -10,7 +10,7 @@ public class BruteForce {
     private static final DecimalFormat DF3 = new DecimalFormat("#.###");
     
     /**
-     * Metodi ratkaisee taulukon.Metodi tyäydentää parametrinaan saamansa taulukon. 
+     * Metodi ratkaisee taulukon. Metodi täydentää parametrinaan saamansa taulukon. 
      * 
      * @param grid Ratkaistava ruudukko. 
      * @return Ratkaisemiseen kulunut aika

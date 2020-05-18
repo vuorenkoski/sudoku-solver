@@ -44,8 +44,8 @@ public class Main {
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
                     System.out.println(grid);
-                    sumBrute += BruteForce.solve(grid);
-                    System.out.println(grid);
+                    sumBrute += AlgorithmX.solve(grid);
+//                    System.out.println(grid);
                     System.out.println("");
                 }
             }
