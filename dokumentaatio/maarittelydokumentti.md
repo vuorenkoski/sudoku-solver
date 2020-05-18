@@ -8,15 +8,15 @@ Sudokuja ratkaistaan kahdella eri algoritmilla, raakaan laskentavoimaan perustuv
 
 **Brute-Force** menetelmä toteutetaan syvyyshaulla. Syvyyshaussa sudokun tyhjiä soluja lähdetään täyttämään vasemmasta yläkulmasta riveittäin. Pienistä numerosta suurempaan. Yhden haaran haku pysähtyy, mikäli seuraavaan soluun ruutuun ei voi lisätä mitään numeroa (tarkistetaan ettei samaa numeroa ole ryhmässä, rivillä tai sarakkeessa). Haku päättyy kun kaikkiin soluihin on saatu numero.
 
-Tällä menetelmällä Sudoku ratkeaa varmasti, mutta se saattaa viedä aikaa. . Ohjelmalla voisi testata kuinka monta kokeilua tällä algoritmilla keskimäärin tarvitaan. 
+Tällä menetelmällä Sudoku ratkeaa varmasti, mutta se saattaa viedä aikaa. Ohjelmalla voisi testata kuinka monta kokeilua tällä algoritmilla keskimäärin tarvitaan. 
 
 Algoritmin käytännön nopeus riippuu käytännössä tyhjien solujen määrän lisäksi siitä, painottuvatko tyhjät solut sudokun yläosaan, jolloin syvyyshaku ajautuu paljon pidemmälle ennen kuin se huomaa haaran päätyvän umpikujaan.
 
-Raakaa laskentavoimaa käyttävän algoritmin lisäksi toteutetaan **Kehittyneempi algoritmi**. Tämä algoritmi rakennetaan päättelymenetelmistä, joita ihminenkin käyttäisi sudokujen ratkaisemiseen (kts. [Tips on Solving Sudoku Puzzles](https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php)). Tuolla sivuilla kuvatuista menetelmistä toteutaan niin moni, kuin on tarvetta. Toki voi olla että vaikeampien suodukujen osalta loppuratkaisuun tarvitaan vielä brute-force algoritmia, mutta tavoitteena on että tätä ei tarvita. 
+Raakaa laskentavoimaa käyttävän algoritmin lisäksi toteutetaan **Kehittyneempi algoritmi**. Tämä algoritmi voidaan rakentaa päättelymenetelmistä, joita ihminenkin käyttäisi sudokujen ratkaisemiseen (kts. [Tips on Solving Sudoku Puzzles](https://www.kristanix.com/sudokuepic/sudoku-solving-techniques.php)). Tuolla sivuilla kuvatuista menetelmistä toteutaan niin moni, kuin on tarvetta. Toki voi olla että vaikeampien suodukujen osalta loppuratkaisuun tarvitaan vielä brute-force algoritmia, mutta tavoitteena on että tätä ei tarvita. 
 
-Toinen vaihtoehto olisi käsitellä sudokua Täsmällinen peite -ongelmana ([Exact cover](https://en.wikipedia.org/wiki/Exact_cover)) ja käyttää algoritmia [Knuth's Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) sen ratkaisemiseen. Vaatii vielä selvitystyötä, jota en ehdi tehdä ennen ensimmäistä viikkopalautusta, mutta todennäköisesti kehittyneempi algoritmi toteutetaan kuitenkin tällä.
+Kuitenkin ensisijaisesti kehittyneempi algoritmi toteutetaan käsitelemällä sudokua Täsmällinen peite -ongelmana ([Exact cover](https://en.wikipedia.org/wiki/Exact_cover)) ja käyttämällä algoritmia [Knuth's Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) sen ratkaisemiseen.
 
-**Tietorakenteeksi** luodaan oma Ruudukko-luokka, joka sisältää 81 int tyyppistä kokonaislukua. Luokka kuvaa sudoku-ruudukkoa. Luokka sisältää tiedon jokaisen ruudun kohdalta onko se alunperin tyhjä. 
+**Tietorakenteeksi** luodaan oma Ruudukko-luokka, joka sisältää int tyyppisen taulukon. Luokka kuvaa sudoku-ruudukkoa. Luokka sisältää lisäksi tiedon sudokun koosta sekä tyhjien solujen lukumäärästä. 
 
 Lisäksi kehittyneempään algoritmia varten tarvitaaneen muitakin tietorakenteita. 
 
