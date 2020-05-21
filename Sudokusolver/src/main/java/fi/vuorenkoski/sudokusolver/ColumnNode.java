@@ -8,13 +8,17 @@ public class ColumnNode {
     private MatrixNode down;
     private ColumnNode left;
     private ColumnNode right;
-    private boolean included;
+    private ColumnNode nextDeleted;
+    private boolean deleted;
+    private int number;
 
-    public ColumnNode() {
+    public ColumnNode(int number) {
         this.down = null;
         this.left = null;
         this.right = null;
-        this.included = true;
+        this.nextDeleted = null;
+        this.deleted = false;
+        this.number = number;
     }
 
     public MatrixNode getDown() {
@@ -29,8 +33,12 @@ public class ColumnNode {
         return right;
     }
 
-    public boolean isIncluded() {
-        return included;
+    public ColumnNode getNextDeleted() {
+        return nextDeleted;
+    }
+    
+    public boolean isDeleted() {
+        return deleted;
     }
     
     public void setDown(MatrixNode down) {
@@ -45,7 +53,18 @@ public class ColumnNode {
         this.right = right;
     }
 
-    public void setIncluded(boolean included) {
-        this.included = included;
+    public ColumnNode delete() {
+        this.deleted = true;
+        return this;
     }
+
+    public void unDelete() {
+        this.deleted = false;
+    }
+
+    public void setNextDeleted(ColumnNode nextDeleted) {
+        this.nextDeleted = nextDeleted;
+    }
+    
+    
 }

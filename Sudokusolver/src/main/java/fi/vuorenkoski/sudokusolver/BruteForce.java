@@ -17,7 +17,7 @@ public class BruteForce {
      */
     public static double solve(Grid grid) {
         int empty = grid.numberOfEmptyCells();
-        System.out.println("Algoritmi: Brute-force\n  Tyhjiä ruutuja: " + empty);
+        System.out.println("Algoritmi: Brute-force");
         double time = (double) System.nanoTime() / 1000000;
         if (next(grid, 1, 1)) {
             System.out.println("  Vastaus löytyi");

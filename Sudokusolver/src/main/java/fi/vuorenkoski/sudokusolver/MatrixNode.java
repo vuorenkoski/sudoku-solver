@@ -9,13 +9,16 @@ public class MatrixNode {
     private MatrixNode down;
     private MatrixNode left;
     private MatrixNode right;
+    private int column;
+    private int row;
 
-
-    public MatrixNode() {
+    public MatrixNode(int column, int row) {
         this.up = null;
         this.down = null;
         this.left = null;
         this.right = null;
+        this.column = column;
+        this.row = row;
     }
 
     public MatrixNode getUp() {
@@ -34,6 +37,14 @@ public class MatrixNode {
         return right;
     }
 
+    public int getColumn() {
+        return column;
+    }
+
+    public int getRow() {
+        return row;
+    }
+    
     public void setUp(MatrixNode up) {
         this.up = up;
     }

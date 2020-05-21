@@ -15,8 +15,8 @@ public class Main {
     public static void main(String[] args) {
         String fileName;
         if (args.length == 0) {
-            System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään sudoku.ss");
-            fileName = "sudoku.ss";
+            fileName = "sudoku3.ss";
+            System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään:" + fileName);
         } else {
             fileName = args[0];
             System.out.println("Syöte tiedosto:" + fileName);
@@ -28,6 +28,7 @@ public class Main {
             String line;
             int count = 0;
             double sumBrute = 0;
+            double sumX = 0;
             int size = Integer.valueOf(fileReader.nextLine());
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
@@ -44,13 +45,26 @@ public class Main {
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
                     System.out.println(grid);
-                    sumBrute += AlgorithmX.solve(grid);
-//                    System.out.println(grid);
+                    Grid completedGrid = new Grid(size);
+                    sumX += AlgorithmX.solve(grid, completedGrid);
+                    sumBrute += BruteForce.solve(grid);
+//                    System.out.println(completedGrid);
+                    if (grid.equals(completedGrid)) {
+                        System.out.println("Ratkaisut on identtiset");
+                    } else {
+                        System.out.println("RATKAISUT EROAVAT");
+                    }
                     System.out.println("");
                 }
             }
             fileReader.close();
-            double average = sumBrute / count;
+            double average = sumX / count;
+            if (average < 1000) {
+                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(average) + " ms");
+            } else {
+                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(average / 1000) + " sekuntia");
+            }
+            average = sumBrute / count;
             if (average < 1000) {
                 System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(average) + " ms");
             } else {
