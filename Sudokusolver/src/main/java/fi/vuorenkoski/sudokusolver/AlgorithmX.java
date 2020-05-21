@@ -1,6 +1,7 @@
 package fi.vuorenkoski.sudokusolver;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 // https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
 //
@@ -35,25 +36,23 @@ public class AlgorithmX {
 
         // Luodaan taulukko Täydellistä peitettä varten
         int[][] constraintTable = createTable(grid);
-//        printTable(constraintTable);
 
         // Luodaan taulukon perusteella matriisi joka linkitetty vertikaalisesti ja horisontaalisesti 
         RowNode rowRoot = new RowNode(0);
         ColumnNode columnRoot = new ColumnNode(0);
         RowNode[] rowArray = new RowNode[grid.getGridSize() * grid.getGridSize() * grid.getGridSize()];
         ColumnNode[] columnArray = new ColumnNode[grid.getGridSize() * grid.getGridSize() * 4];
-        createMatrix(constraintTable, grid.getGridSize(), rowRoot, columnRoot, rowArray, columnArray);
+        createMatrix(constraintTable, grid, rowRoot, columnRoot, rowArray, columnArray);
         
         // Matriisin avulla käydään läpi Algorithmx
-       if (solveExactCover(rowRoot, columnRoot, rowArray, columnArray)) {
-           System.out.println("  Vastaus löytyi");
-       } else {
-           System.out.println("  Vastausta ei löytynyt");
-       }
+        if (solveExactCover(rowRoot, columnRoot, columnArray)) {
+            System.out.println("  Vastaus löytyi");
+        } else {
+            System.out.println("  Vastausta ei löytynyt");
+        }
         
         // Luodaan vastaus
-        fillGrid(completedGrid, grid.getGridSize(), rowArray);
-//        System.out.println(solvedGrid);
+        fillGrid(completedGrid, rowArray);
 
         time = (double) System.nanoTime() / 1000000 - time;
         if (time < 1000) { 
@@ -65,10 +64,11 @@ public class AlgorithmX {
     }
 
     // Idea tässä on luoda kahteen suuntaan linkitetty lista niin riveittän kuin sarakkeittain
-    private static void createMatrix(int[][] table, int gridSize, RowNode rowRoot, ColumnNode columnRoot, RowNode[] rowArray, ColumnNode[] columnArray) {
+    private static void createMatrix(int[][] table, Grid grid, RowNode rowRoot, ColumnNode columnRoot, RowNode[] rowArray, ColumnNode[] columnArray) {
         ColumnNode cPrevious = columnRoot;
         RowNode rPrevious = rowRoot;
         MatrixNode rmPrevious = null;
+        int gridSize = grid.getGridSize();
         
         // luodaan sarakkeista linkitetty lista ja taulukko
         for (int i = 0; i < gridSize * gridSize * 4; i++) {
@@ -93,7 +93,7 @@ public class AlgorithmX {
             rmPrevious = null;
             for (int x = 0; x < gridSize * gridSize * 4; x++) {
                 if (table[y][x] == 1) {
-                    MatrixNode node = new MatrixNode(x, y);
+                    MatrixNode node = new MatrixNode(columnArray[x], rowArray[y]);
                     
                     // Rivin linkitys solujen linkityts keskenään
                     if (rmPrevious == null) {
@@ -116,85 +116,92 @@ public class AlgorithmX {
                         node.setUp(bottom);
                     }
                 }
-                
-//                // jos rivi on tyhjä, poistetaan se kokonaan listasta
-//                if (rPrevious.getRight() == null) {
-//                    rPrevious.delete();
-//                }
             }  
+        }
+        
+        // Valmiiden solujen osalta poistetaan turhat rivit ja lisätään included merkintä
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                if (grid.getCell(x + 1, y + 1) != 0) {
+                    int i = (y * gridSize * gridSize) + (x * gridSize);
+                    RowNode r = rowArray[i + grid.getCell(x + 1, y + 1) - 1];
+                    r.setIncluded(true);
+                    MatrixNode nodex = r.getRight();
+                    while (nodex != null) {
+                        MatrixNode nodey = nodex.getColumn().getDown();
+                        while (nodey != null) {
+                            nodey.getRow().delete();
+                            nodey = nodey.getDown();
+                        }
+                        nodex.getColumn().delete();
+                        nodex = nodex.getRight();
+                    }
+                }
+            }
         }
     }
     
-    private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot, RowNode[] rowArray, ColumnNode[] columnArray) {      
+    private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot, ColumnNode[] columnArray) {      
         ColumnNode deletedColumns = new ColumnNode(0);
         ColumnNode deletedColumnPointer = deletedColumns;
         RowNode deletedRows = new RowNode(0);
         RowNode deletedRowPointer = deletedRows;
         //    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
         //    2. Otherwise choose a column c (deterministically).
-        ColumnNode c = columnRoot.getRight();
-        while (c != null && c.isDeleted()) {
-            c = c.getRight();
-        }
-        if (c == null) {
+        ColumnNode c = chooseSmallestColumn(columnArray);
+        if (c.isDeleted()) {
             return true;
         }
         //    3. Choose a row r such that A(r, c) = 1 (nondeterministically).        
         MatrixNode node = c.getDown();
-        while (node != null && rowArray[node.getRow()].isDeleted()) {
-//            System.out.println(node.getRow() + "," + node.getColumn() + rowArray[node.getRow()].isDeleted()); /////////////////////////////////////
-            node = node.getDown();
-        }
         int lkm = 0;
         while (node != null) {
             lkm++;
-//            System.out.println("testiin("+lkm+"): " + node.getRow() + "," + node.getColumn()); ////////////////////////
-            int r = node.getRow();
+            RowNode r = node.getRow();
         //    4. Include row r in the partial solution.
-            rowArray[r].setIncluded(true); // otetaan tämä rivi mukaan vastaukseen
+            r.setIncluded(true); // otetaan tämä rivi mukaan vastaukseen
         //    5. For each column j such that A(r, j) = 1,
         //        for each row i such that A(i, j) = 1,
         //            delete row i from matrix A.
         //        delete column j from matrix A.
-            MatrixNode x = rowArray[r].getRight();
+            MatrixNode x = r.getRight();
             while (x != null) {
-                MatrixNode y = columnArray[x.getColumn()].getDown();
+                MatrixNode y = x.getColumn().getDown();
                 while (y != null) {
-                    if (!rowArray[y.getRow()].isDeleted()) {
-                        rowArray[y.getRow()].delete();
-                        deletedRowPointer.setNextDeleted(rowArray[y.getRow()]);
-                        deletedRowPointer = rowArray[y.getRow()];
-                        deletedRowPointer.setNextDeleted(null);
+                    if (!y.getRow().isDeleted()) {
+                        y.getRow().delete();
+                        deletedRowPointer.setNextDeleted(y.getRow());
+                        deletedRowPointer = y.getRow();
                     }
-//                    System.out.println("Delete:" + y.getRow()); ////////////////////////////////////
                     y = y.getDown();
                 }
-                if (!columnArray[x.getColumn()].isDeleted()) {
-                    columnArray[x.getColumn()].delete();
-                    deletedColumnPointer.setNextDeleted(columnArray[x.getColumn()]);
-                    deletedColumnPointer = columnArray[x.getColumn()];
-                    deletedColumnPointer.setNextDeleted(null);
+                if (!x.getColumn().isDeleted()) {
+                    x.getColumn().delete();
+                    deletedColumnPointer.setNextDeleted(x.getColumn());
+                    deletedColumnPointer = x.getColumn();
                 }
                 x = x.getRight();
             }
         //    6. Repeat this algorithm recursively on the reduced matrix A.  
-            if (solveExactCover(rowRoot, columnRoot, rowArray, columnArray)) {
+            if (solveExactCover(rowRoot, columnRoot, columnArray)) {
                 return true;
             } 
         // Vaiheessa 5 poistetut rivit ja sarakkeet palautetaan
-            rowArray[r].setIncluded(false);
+            r.setIncluded(false);
             
+            deletedColumnPointer.setNextDeleted(null);
             deletedColumns = deletedColumns.getNextDeleted();
             while (deletedColumns != null) {
-                deletedColumns.unDelete();
+                deletedColumns.undelete();
                 deletedColumns = deletedColumns.getNextDeleted();
             }
             deletedColumns = new ColumnNode(0);
             deletedColumnPointer = deletedColumns;
             
+            deletedRowPointer.setNextDeleted(null);
             deletedRows = deletedRows.getNextDeleted();
             while (deletedRows != null) {
-                deletedRows.unDelete();
+                deletedRows.undelete();
                 deletedRows = deletedRows.getNextDeleted();
             }
             deletedRows = new RowNode(0);
@@ -202,16 +209,17 @@ public class AlgorithmX {
         
             // seuraava rivi.
             node = node.getDown();
-//            System.out.println(node); ///////////////////////////////////////////////////
-            while (node != null && rowArray[node.getRow()].isDeleted()) {
-                node = node.getDown();
-            }
         }
-//        System.out.println("palautetaan false"); /////////////////////////////////////
         return false;
     }
     
-    private static void fillGrid(Grid grid, int gridSize, RowNode[] rowArray) {
+    private static ColumnNode chooseSmallestColumn(ColumnNode[] columnArray) {
+        Arrays.sort(columnArray);
+        return columnArray[0];
+    }
+       
+    private static void fillGrid(Grid grid, RowNode[] rowArray) {
+        int gridSize = grid.getGridSize();
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
                 for (int i = 0; i < gridSize; i++) {
@@ -254,16 +262,31 @@ public class AlgorithmX {
         return table;
     }
     
-    private static void printTable(int[][] table) {
-        for (int i = 0; i < 81 * 9; i++) {
-            for (int j = 0; j < 81 * 4; j++) {
-                if (table[i][j] == 1) {
-                    System.out.print("x");
-                } else {
-                    System.out.print(".");                    
-                }
-            }
-            System.out.println("");
-        }
-    }
+//    private static void printTable(int[][] table) {
+//        for (int i = 0; i < 81 * 9; i++) {
+//            for (int j = 0; j < 81 * 4; j++) {
+//                if (table[i][j] == 1) {
+//                    System.out.print("x");
+//                } else {
+//                    System.out.print(".");                    
+//                }
+//            }
+//            System.out.println("");
+//        }
+//    }
+    
+//    private static void fillGrid(Grid grid, RowNode rowRoot) {
+//        RowNode row = rowRoot.getDown();
+//        int gridSize = grid.getGridSize();
+//        while (row != null) {
+//            if (row.isIncluded()) {
+//                System.out.println("sfd");
+//                int i = row.getNumber();
+//                int value = i % gridSize;
+//                i = i / gridSize;
+//                grid.setCell(i % gridSize, i / gridSize, value);
+//            }
+//            row = row.getDown();
+//        }
+//    }
 }

@@ -7,18 +7,25 @@ package fi.vuorenkoski.sudokusolver;
 public class MatrixNode {
     private MatrixNode up;
     private MatrixNode down;
+    private MatrixNode downPermanent;
     private MatrixNode left;
     private MatrixNode right;
-    private int column;
-    private int row;
+    private MatrixNode rightPermanent;
+    private ColumnNode column;
+    private RowNode row;
+    private boolean deleted;
 
-    public MatrixNode(int column, int row) {
+    public MatrixNode(ColumnNode column, RowNode row) {
         this.up = null;
         this.down = null;
+        this.downPermanent = null;
         this.left = null;
         this.right = null;
+        this.rightPermanent = null;
+        this.deleted = false;
         this.column = column;
         this.row = row;
+        this.column.increseSize();
     }
 
     public MatrixNode getUp() {
@@ -29,6 +36,10 @@ public class MatrixNode {
         return down;
     }
 
+    public MatrixNode getDownPermanent() {
+        return downPermanent;
+    }
+
     public MatrixNode getLeft() {
         return left;
     }
@@ -37,11 +48,15 @@ public class MatrixNode {
         return right;
     }
 
-    public int getColumn() {
+    public MatrixNode getRightPermanent() {
+        return rightPermanent;
+    }
+
+    public ColumnNode getColumn() {
         return column;
     }
 
-    public int getRow() {
+    public RowNode getRow() {
         return row;
     }
     
@@ -51,6 +66,7 @@ public class MatrixNode {
 
     public void setDown(MatrixNode down) {
         this.down = down;
+        this.downPermanent = down;
     }
 
     public void setLeft(MatrixNode left) {
@@ -59,5 +75,19 @@ public class MatrixNode {
 
     public void setRight(MatrixNode right) {
         this.right = right;
-    }    
+    }
+    
+    public void delete() {
+        if (!this.deleted) {
+            this.deleted = true;
+            this.column.decreseSize();
+        }
+    }
+    
+    public void undelete() {
+        if (this.deleted) {
+            this.deleted = false;
+            this.column.increseSize();
+        }
+    }
 }

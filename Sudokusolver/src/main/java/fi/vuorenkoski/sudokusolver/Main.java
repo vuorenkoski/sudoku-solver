@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         String fileName;
         if (args.length == 0) {
-            fileName = "sudoku3.ss";
+            fileName = "sudoku.ss";
             System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään:" + fileName);
         } else {
             fileName = args[0];
@@ -29,6 +29,7 @@ public class Main {
             int count = 0;
             double sumBrute = 0;
             double sumX = 0;
+            boolean differences = false;
             int size = Integer.valueOf(fileReader.nextLine());
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
@@ -41,23 +42,27 @@ public class Main {
                     }
                     Grid grid = new Grid(size);
                     grid.insertData(lines);
+                    Grid completedGrid = new Grid(size);
                     count++;
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
                     System.out.println(grid);
-                    Grid completedGrid = new Grid(size);
                     sumX += AlgorithmX.solve(grid, completedGrid);
+                    System.out.println(completedGrid);
                     sumBrute += BruteForce.solve(grid);
-//                    System.out.println(completedGrid);
                     if (grid.equals(completedGrid)) {
                         System.out.println("Ratkaisut on identtiset");
                     } else {
+                        differences = true;
                         System.out.println("RATKAISUT EROAVAT");
                     }
                     System.out.println("");
                 }
             }
             fileReader.close();
+            if (differences) {
+                System.out.println("RATKAISUISSA ON EROJA");
+            }
             double average = sumX / count;
             if (average < 1000) {
                 System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(average) + " ms");
@@ -73,6 +78,5 @@ public class Main {
         } catch (FileNotFoundException ex) {
             System.out.println("Tiedostoa ei löytynyt: " + fileName);
         }
-    }
-    
+    }    
 }

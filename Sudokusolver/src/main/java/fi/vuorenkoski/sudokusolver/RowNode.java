@@ -6,6 +6,7 @@ package fi.vuorenkoski.sudokusolver;
  */
 public class RowNode {
     private MatrixNode right;
+    private MatrixNode rightPermanent;
     private RowNode up;
     private RowNode down;
     private RowNode nextDeleted;
@@ -17,6 +18,7 @@ public class RowNode {
         this.down = null;
         this.up = null;
         this.right = null;
+        this.rightPermanent = null;
         this.nextDeleted = null;
         this.deleted = false;
         this.included = false;
@@ -42,7 +44,6 @@ public class RowNode {
     public int getNumber() {
         return number;
     }
-
     
     public boolean isIncluded() {
         return included;
@@ -54,6 +55,7 @@ public class RowNode {
 
     public void setRight(MatrixNode right) {
         this.right = right;
+        this.rightPermanent = right;
     }
 
     public void setUp(RowNode up) {
@@ -65,11 +67,53 @@ public class RowNode {
     }
 
     public void delete() {
-        this.deleted = true;
+        if (!this.deleted) {
+            this.deleted = true;
+            if (this.down != null) {
+                this.down.setUp(this.up);
+            }
+            this.up.setDown(this.down);
+
+            // poistetaan rivin solujen sarake linkitykset
+            MatrixNode x = this.rightPermanent;
+            while (x != null) {
+                x.delete();
+                if (x.getDown() != null) {
+                    x.getDown().setUp(x.getUp());
+                }
+                if (x.getUp() != null) {
+                    x.getUp().setDown(x.getDown());
+                } else {
+                    x.getColumn().setDown(x.getDown());
+                }
+                               
+                x = x.getRightPermanent();
+            }
+        }
     }
 
-    public void unDelete() {
+    public void undelete() {
         this.deleted = false;
+        if (this.down != null) {
+            this.down.setUp(this);
+        }
+        this.up.setDown(this);
+
+        // palautetaan rivin solujen sarake linkitykset
+        MatrixNode x = this.rightPermanent;
+        while (x != null) {
+            x.undelete();
+            if (x.getDown() != null) {
+                x.getDown().setUp(x);
+            }
+            if (x.getUp() != null) {
+                x.getUp().setDown(x);
+            } else {
+                x.getColumn().setDown(x);
+            }
+            
+            x = x.getRightPermanent();
+        }
     }
 
     public void setIncluded(boolean included) {
