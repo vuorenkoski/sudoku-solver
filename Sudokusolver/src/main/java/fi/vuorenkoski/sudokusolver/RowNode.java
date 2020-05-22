@@ -1,12 +1,11 @@
 package fi.vuorenkoski.sudokusolver;
 
 /**
- * Matriisin sarake, joka on linkitetty vasempaan,  oikeaan ja ylimpään soluun
+ * Matriisin rivi, joka on linkitetty alempaan ja ylempään riviin sekä rivin ensimmäiseen solmuun
  * @author Lauri Vuorenkoski
  */
 public class RowNode {
     private MatrixNode right;
-    private MatrixNode rightPermanent;
     private RowNode up;
     private RowNode down;
     private RowNode nextDeleted;
@@ -18,7 +17,6 @@ public class RowNode {
         this.down = null;
         this.up = null;
         this.right = null;
-        this.rightPermanent = null;
         this.nextDeleted = null;
         this.deleted = false;
         this.included = false;
@@ -55,7 +53,6 @@ public class RowNode {
 
     public void setRight(MatrixNode right) {
         this.right = right;
-        this.rightPermanent = right;
     }
 
     public void setUp(RowNode up) {
@@ -66,16 +63,20 @@ public class RowNode {
         this.down = down;
     }
 
+    /**
+     * Metodi poistaa kyseisen rivin matriisista. 
+     * Metodi samalla poistaa kaikkien rivin solmujen sarakelinkityksen.
+     */
     public void delete() {
         if (!this.deleted) {
             this.deleted = true;
-            if (this.down != null) {
-                this.down.setUp(this.up);
-            }
-            this.up.setDown(this.down);
+//            if (this.down != null) {
+//                this.down.setUp(this.up);
+//            }
+//            this.up.setDown(this.down);
 
             // poistetaan rivin solujen sarake linkitykset
-            MatrixNode x = this.rightPermanent;
+            MatrixNode x = this.right;
             while (x != null) {
                 x.delete();
                 if (x.getDown() != null) {
@@ -87,20 +88,20 @@ public class RowNode {
                     x.getColumn().setDown(x.getDown());
                 }
                                
-                x = x.getRightPermanent();
+                x = x.getRight();
             }
         }
     }
 
     public void undelete() {
         this.deleted = false;
-        if (this.down != null) {
-            this.down.setUp(this);
-        }
-        this.up.setDown(this);
+//        if (this.down != null) {
+//            this.down.setUp(this);
+//        }
+//        this.up.setDown(this);
 
         // palautetaan rivin solujen sarake linkitykset
-        MatrixNode x = this.rightPermanent;
+        MatrixNode x = this.right;
         while (x != null) {
             x.undelete();
             if (x.getDown() != null) {
@@ -112,7 +113,7 @@ public class RowNode {
                 x.getColumn().setDown(x);
             }
             
-            x = x.getRightPermanent();
+            x = x.getRight();
         }
     }
 
@@ -123,5 +124,4 @@ public class RowNode {
     public void setNextDeleted(RowNode nextDeleted) {
         this.nextDeleted = nextDeleted;
     }
-       
 }

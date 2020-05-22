@@ -16,7 +16,7 @@ public class Main {
         String fileName;
         if (args.length == 0) {
             fileName = "sudoku.ss";
-            System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään:" + fileName);
+            System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään: " + fileName);
         } else {
             fileName = args[0];
             System.out.println("Syöte tiedosto:" + fileName);
@@ -31,6 +31,7 @@ public class Main {
             double sumX = 0;
             boolean differences = false;
             int size = Integer.valueOf(fileReader.nextLine());
+            System.out.println("Sudokujen koko: " + size * size + "x" + size * size);
             while (fileReader.hasNextLine()) {
                 line = fileReader.nextLine();
                 if (!line.isEmpty()) {

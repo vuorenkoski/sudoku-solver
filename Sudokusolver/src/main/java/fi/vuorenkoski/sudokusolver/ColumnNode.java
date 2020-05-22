@@ -1,12 +1,11 @@
 package fi.vuorenkoski.sudokusolver;
 
 /**
- * Matriisin sarake, joka on linkitetty vasempaan, oikeaan ja ylimpään soluun
+ * Matriisin sarake, joka on linkitetty vasempaan ja oikeaan sarakkeeseen sekä sarakkeen ensimmäiseen soluun
  * @author Lauri Vuorenkoski
  */
 public class ColumnNode implements Comparable<ColumnNode> {
     private MatrixNode down;
-    private MatrixNode downPermanent;
     private ColumnNode left;
     private ColumnNode right;
     private ColumnNode nextDeleted;
@@ -16,7 +15,6 @@ public class ColumnNode implements Comparable<ColumnNode> {
 
     public ColumnNode(int number) {
         this.down = null;
-        this.downPermanent = null;
         this.left = null;
         this.right = null;
         this.nextDeleted = null;
@@ -47,7 +45,6 @@ public class ColumnNode implements Comparable<ColumnNode> {
     
     public void setDown(MatrixNode down) {
         this.down = down;
-        this.downPermanent = down;
     }
 
     public void setLeft(ColumnNode left) {

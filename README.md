@@ -4,9 +4,11 @@ Tira-labran harjoitustyö, alkukesä 2020
 ## Viikkoraportit
 * [Viikko 1](dokumentaatio/viikkoraportti1.md)
 * [Viikko 2](dokumentaatio/viikkoraportti2.md)
+* [Viikko 3](dokumentaatio/viikkoraportti3.md)
 
 ## Dokumentaatio
 * [Määrittelydokumentti](dokumentaatio/maarittelydokumentti.md)
+* [Käyttöohje](dokumentaatio/maarittelydokumentti.md)
 
 ## Komentorivitoiminnot
 

@@ -1,16 +1,14 @@
 package fi.vuorenkoski.sudokusolver;
 
 /**
- * Matriisin solmu, joka on linkitetty ylempään, alempaan, vasempaan ja oikeaan
+ * Matriisin solmu, joka on linkitetty ylempään, alempaan, vasempaan ja oikeaan solmuun
  * @author Lauri Vuorenkoski
  */
 public class MatrixNode {
     private MatrixNode up;
     private MatrixNode down;
-    private MatrixNode downPermanent;
     private MatrixNode left;
     private MatrixNode right;
-    private MatrixNode rightPermanent;
     private ColumnNode column;
     private RowNode row;
     private boolean deleted;
@@ -18,10 +16,8 @@ public class MatrixNode {
     public MatrixNode(ColumnNode column, RowNode row) {
         this.up = null;
         this.down = null;
-        this.downPermanent = null;
         this.left = null;
         this.right = null;
-        this.rightPermanent = null;
         this.deleted = false;
         this.column = column;
         this.row = row;
@@ -36,20 +32,12 @@ public class MatrixNode {
         return down;
     }
 
-    public MatrixNode getDownPermanent() {
-        return downPermanent;
-    }
-
     public MatrixNode getLeft() {
         return left;
     }
 
     public MatrixNode getRight() {
         return right;
-    }
-
-    public MatrixNode getRightPermanent() {
-        return rightPermanent;
     }
 
     public ColumnNode getColumn() {
@@ -66,7 +54,6 @@ public class MatrixNode {
 
     public void setDown(MatrixNode down) {
         this.down = down;
-        this.downPermanent = down;
     }
 
     public void setLeft(MatrixNode left) {
