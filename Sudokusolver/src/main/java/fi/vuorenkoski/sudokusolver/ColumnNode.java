@@ -5,13 +5,13 @@ package fi.vuorenkoski.sudokusolver;
  * @author Lauri Vuorenkoski
  */
 public class ColumnNode implements Comparable<ColumnNode> {
-    private MatrixNode down;
+    public MatrixNode down;
     private ColumnNode left;
-    private ColumnNode right;
+    public ColumnNode right;
     private ColumnNode nextDeleted;
     private boolean deleted;
     private int number;
-    private int size;
+    public int size;
 
     public ColumnNode(int number) {
         this.down = null;
@@ -56,13 +56,26 @@ public class ColumnNode implements Comparable<ColumnNode> {
     }
 
     public void delete() {
-        if (!this.deleted) {
-            this.deleted = true;
-            if (this.right != null) {
-                this.right.setLeft(this.left);
-            }
-            this.left.setRight(this.right);
+        this.deleted = true;
+        if (this.right != null) {
+            this.right.setLeft(this.left);
         }
+        this.left.setRight(this.right);
+        
+//        // poistetaan sarakkeen solujen rivi linkitykset
+//        MatrixNode x = this.down;
+//        while (x != null) {
+//            x.delete();
+//            if (x.right!= null) {
+//                x.right.left = x.left;
+//            }
+//            if (x.left != null) {
+//                x.left.right = x.right;
+//            } else {
+//                x.row.right = x.right;
+//            }
+//            x = x.down;
+//        }
     }
 
     public void undelete() {
@@ -71,6 +84,21 @@ public class ColumnNode implements Comparable<ColumnNode> {
             this.right.setLeft(this);
         }
         this.left.setRight(this);
+        
+//        // palautetaan rivin solujen sarake linkitykset
+//        MatrixNode x = this.down;
+//        while (x != null) {
+//            x.undelete();
+//            if (x.right != null) {
+//                x.right.left = x;
+//            }
+//            if (x.left != null) {
+//                x.left.right = x;
+//            } else {
+//                x.row.right = x;
+//            }
+//            x = x.down;
+//        }
     }
 
     public void setNextDeleted(ColumnNode nextDeleted) {

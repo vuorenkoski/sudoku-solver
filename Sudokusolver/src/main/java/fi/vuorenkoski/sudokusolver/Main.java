@@ -19,7 +19,7 @@ public class Main {
             System.out.println("Tiedoston nimeä ei ollut argumenttina, käytetään: " + fileName);
         } else {
             fileName = args[0];
-            System.out.println("Syöte tiedosto:" + fileName);
+            System.out.println("Syöte:" + fileName);
         }
         
         File file = new File(fileName);
@@ -30,9 +30,9 @@ public class Main {
             double sumBrute = 0;
             double sumX = 0;
             boolean differences = false;
-            int size = Integer.valueOf(fileReader.nextLine());
-            System.out.println("Sudokujen koko: " + size * size + "x" + size * size);
             while (fileReader.hasNextLine()) {
+                int size = Integer.valueOf(fileReader.nextLine());
+                System.out.println("Sudokujen koko: " + size * size + "x" + size * size);  
                 line = fileReader.nextLine();
                 if (!line.isEmpty()) {
                     String[] lines = new String[size * size + size - 1];
@@ -47,9 +47,10 @@ public class Main {
                     count++;
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
-                    System.out.println(grid);
+                    System.out.println("Tyhjat ruudut: " + grid.numberOfEmptyCells());
+//                    System.out.println(grid);
                     sumX += AlgorithmX.solve(grid, completedGrid);
-                    System.out.println(completedGrid);
+//                    System.out.println(completedGrid);
                     sumBrute += BruteForce.solve(grid);
                     if (grid.equals(completedGrid)) {
                         System.out.println("Ratkaisut on identtiset");
@@ -66,16 +67,17 @@ public class Main {
             }
             double average = sumX / count;
             if (average < 1000) {
-                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(average) + " ms");
+                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(sumX / count) + " ms");
             } else {
-                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(average / 1000) + " sekuntia");
+                System.out.println("Keskimääräinen aika (Algorithm X): " + DF3.format(sumX / count / 1000) + " sekuntia");
             }
             average = sumBrute / count;
             if (average < 1000) {
-                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(average) + " ms");
+                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(sumBrute / count) + " ms");
             } else {
-                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(average / 1000) + " sekuntia");
+                System.out.println("Keskimääräinen aika (Brute-Force): " + DF3.format(sumBrute / count / 1000) + " sekuntia");
             }
+            System.out.println("Brute-force oli " +  DF3.format(sumBrute / sumX) + " kertaa hitaampi");
         } catch (FileNotFoundException ex) {
             System.out.println("Tiedostoa ei löytynyt: " + fileName);
         }

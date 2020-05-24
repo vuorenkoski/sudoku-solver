@@ -5,12 +5,12 @@ package fi.vuorenkoski.sudokusolver;
  * @author Lauri Vuorenkoski
  */
 public class MatrixNode {
-    private MatrixNode up;
-    private MatrixNode down;
-    private MatrixNode left;
-    private MatrixNode right;
-    private ColumnNode column;
-    private RowNode row;
+    public MatrixNode up;
+    public MatrixNode down;
+    public MatrixNode left;
+    public MatrixNode right;
+    public ColumnNode column;
+    public RowNode row;
     private boolean deleted;
 
     public MatrixNode(ColumnNode column, RowNode row) {

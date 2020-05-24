@@ -7,7 +7,7 @@ Sudokuja ratkaistaan kahdella eri algoritmilla, raakaan laskentavoimaan perustuv
 
 Ohjelma ottaa syötteenä tiedoston joka sisältää yhden tai useamman sudokun. Tiedon nimi annetaan ohjelman parametrina. Mikäli ohjelmalle ei anneta parametria, käytetään käynnistyshakemistossa oleva sudoku.ss -tiedostoa.
 
-Syötetiedoston ensimmäisellä rivillä on numero, joka kertoo sudokujen koon (3=9x9, 4=16x16, 5=25x25).
+Ennen jokaista sudokua syötetiedostossa on rivi, joka kertoo sudokujen koon (3=9x9, 4=16x16, 5=25x25).
 
 Solujen arvot:
 
@@ -15,7 +15,7 @@ Solujen arvot:
 * 16x16 sudoku: 0..9 ja A..F
 * 25x25 sudoku: A..Y
 
-Mikäli tiedosto sisältää useamman sudokun, on ne erotettu tyhjällä rivillä. Yksi tiedosto voi sisältää vain yhden kokoisia sudokuja.
+Tiedosto voi sisältä useamman sudoku. Tällöin niitä erottaa vain rivi jossa on sudokun koko. Yksi tiedosto voi sisältää useamman kokoisia sudokuja.
 
 Sudokun muoto:
 

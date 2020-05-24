@@ -1,7 +1,6 @@
 package fi.vuorenkoski.sudokusolver;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
 
 // https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
 //
@@ -14,7 +13,6 @@ import java.util.Arrays;
 //            delete row i from matrix A.
 //        delete column j from matrix A.
 //    6. Repeat this algorithm recursively on the reduced matrix A.
-
 
 /**
  * Luokan metodit toteuttavat Algotirithm X haun.
@@ -31,22 +29,20 @@ public class AlgorithmX {
      * @return Ratkaisemiseen kulunut aika
      */
     public static double solve(Grid grid, Grid completedGrid) {
-        int empty = grid.numberOfEmptyCells();
         System.out.println("Algoritmi: Algorithm X");
         double time = (double) System.nanoTime() / 1000000;
 
         // Luodaan taulukko Täydellistä peitettä varten
         int[][] constraintTable = createConstraintTable(grid);
 
-        // Luodaan taulukon perusteella matriisi joka linkitetty vertikaalisesti ja horisontaalisesti 
+        // Luodaan taulukon perusteella matriisi jonka solut linkitetty vertikaalisesti ja horisontaalisesti 
         RowNode rowRoot = new RowNode(0);
         ColumnNode columnRoot = new ColumnNode(0);
-
-        ColumnNode[] columnArray = new ColumnNode[grid.getGridSize() * grid.getGridSize() * 4];
-        createMatrix(constraintTable, grid, rowRoot, columnRoot, columnArray);
+        createMatrix(constraintTable, grid, rowRoot, columnRoot);
+        System.out.println("  Valmistelu (ms):" + DF3.format((double) System.nanoTime() / 1000000 - time));
         
         // Matriisin avulla käydään läpi Algorithmx
-        if (solveExactCover(rowRoot, columnRoot, columnArray)) {
+        if (solveExactCover(rowRoot, columnRoot)) {
             System.out.println("  Vastaus löytyi");
         } else {
             System.out.println("  Vastausta ei löytynyt");
@@ -65,10 +61,12 @@ public class AlgorithmX {
     }
 
     /**
-     * Metodi luo 2d taulukosta kahteen suuntaan linkitetyn listan niin riveittän kuin sarakkeittain. 
+     * Metodi luo taulukosta kahteen suuntaan linkitetyn listan niin riveittän kuin sarakkeittain. 
      * 
      */
-    private static void createMatrix(int[][] table, Grid grid, RowNode rowRoot, ColumnNode columnRoot, ColumnNode[] columnArray) {
+    private static void createMatrix(int[][] table, Grid grid, RowNode rowRoot, ColumnNode columnRoot) {
+        ColumnNode[] columnArray = new ColumnNode[grid.getGridSize() * grid.getGridSize() * 4];
+        MatrixNode[] columnBottomArray = new MatrixNode[grid.getGridSize() * grid.getGridSize() * 4];
         RowNode[] rowArray = new RowNode[grid.getGridSize() * grid.getGridSize() * grid.getGridSize()];
         ColumnNode cPrevious = columnRoot;
         RowNode rPrevious = rowRoot;
@@ -109,16 +107,14 @@ public class AlgorithmX {
                     }
                     rmPrevious = node;
                     
-                    // Sarakkeen solujen linkitys keskenään, haetaan ensin sarakkeen alin solu
-                    if (columnArray[x].getDown() == null) {
+                    // Sarakkeen solujen linkitys keskenään
+                    if (columnBottomArray[x] == null) {
                         columnArray[x].setDown(node);
+                        columnBottomArray[x] = node;
                     } else {
-                        MatrixNode bottom = columnArray[x].getDown();
-                        while (bottom.getDown() != null) {
-                            bottom = bottom.getDown();
-                        }
-                        bottom.setDown(node);
-                        node.setUp(bottom);
+                        columnBottomArray[x].setDown(node);
+                        node.setUp(columnBottomArray[x]);
+                        columnBottomArray[x] = node;
                     }
                 }
             }  
@@ -151,26 +147,21 @@ public class AlgorithmX {
      * Metodi palauttaa true jos ratkaisu löytyi, muuten false
      * Vastaus on ne rivisolmut, joiden status on  "included"
      */
-    private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot, ColumnNode[] columnArray) {      
-        ColumnNode deletedColumns = new ColumnNode(0);
-        ColumnNode deletedColumnPointer = deletedColumns;
+    private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot) {      
         RowNode deletedRows = new RowNode(0);
         RowNode deletedRowPointer = deletedRows;
         
         //    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
         //    2. Otherwise choose a column c (deterministically).
-        ColumnNode c = chooseSmallestColumn(columnArray);
+        ColumnNode c = chooseSmallestColumn(columnRoot);
         if (c == null) {
             return true;
         }
         
         //    3. Choose a row r such that A(r, c) = 1 (nondeterministically).        
         MatrixNode node = c.getDown();
-        int lkm = 0;
         while (node != null) {
-            lkm++;
             RowNode r = node.getRow();
-            
         //    4. Include row r in the partial solution.
             r.setIncluded(true);
             
@@ -191,29 +182,28 @@ public class AlgorithmX {
         //        delete column j from matrix A.
                 if (!x.getColumn().isDeleted()) {
                     x.getColumn().delete();
-                    deletedColumnPointer.setNextDeleted(x.getColumn());
-                    deletedColumnPointer = x.getColumn();
-                }
+//                    deletedColumnPointer.setNextDeleted(x.getColumn());
+//                    deletedColumnPointer = x.getColumn();
+                } 
                 x = x.getRight();
             }
             
         //    6. Repeat this algorithm recursively on the reduced matrix A.  
-            if (solveExactCover(rowRoot, columnRoot, columnArray)) {
+            if (solveExactCover(rowRoot, columnRoot)) {
                 return true;
             }
             
         // Vaiheessa 5 poistetut rivit ja sarakkeet palautetaan
             r.setIncluded(false);
-                       
-            deletedColumnPointer.setNextDeleted(null);
-            deletedColumns = deletedColumns.getNextDeleted();
-            while (deletedColumns != null) {
-                deletedColumns.undelete();
-                deletedColumns = deletedColumns.getNextDeleted();
-            }
-            deletedColumns = new ColumnNode(0);
-            deletedColumnPointer = deletedColumns;
             
+            x = r.getRight();
+            while (x != null) {
+                if (x.getColumn().isDeleted()) {
+                    x.getColumn().undelete();
+                } 
+                x = x.getRight();
+            }
+           
             deletedRowPointer.setNextDeleted(null);
             deletedRows = deletedRows.getNextDeleted();
             while (deletedRows != null) {
@@ -232,30 +222,23 @@ public class AlgorithmX {
     /**
      * Metodi palauttaa sarakesolmun, jonka sarakkeessa on vähiten soluja. 
      */
-    private static ColumnNode chooseSmallestColumn(ColumnNode[] columnArray) {
-        Arrays.sort(columnArray);
-        if (columnArray[0].isDeleted()) {
-            return null;
+    private static ColumnNode chooseSmallestColumn(ColumnNode rootColumn) {
+        ColumnNode column = rootColumn.getRight();
+        int min = 9999;
+        ColumnNode minColumn = null;
+        while (column != null) {
+            if (column.size < min) {
+                minColumn = column;
+                min = column.size;
+                if (min == 0) {
+                    return minColumn;
+                }
+            }
+            column = column.right;
         }
-        return columnArray[0];
+        return minColumn;
     }
-    // kokeilu, joka kuitenkin hitaampi
-//    private static ColumnNode chooseSmallestColumn(ColumnNode rootColumn) {
-//        ColumnNode column = rootColumn.getRight();
-//        if (column == null) return null;
-//        int min = column.getSize();
-//        ColumnNode minColumn = column;
-//        while (column.getRight() != null) {
-//            column = column.getRight();
-//            if (column.getSize()<min) {
-//                minColumn = column;
-//                min = column.getSize();
-//            }
-//            if (min == 0) return minColumn;
-//        }
-//        return minColumn;
-//    }
-    
+
     /**
      * Metodi täyttää sudoku-ruudokun käyttäen rivisolmu -listaa. 
      */

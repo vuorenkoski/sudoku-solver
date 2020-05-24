@@ -5,7 +5,7 @@ package fi.vuorenkoski.sudokusolver;
  * @author Lauri Vuorenkoski
  */
 public class RowNode {
-    private MatrixNode right;
+    public MatrixNode right;
     private RowNode up;
     private RowNode down;
     private RowNode nextDeleted;
@@ -68,52 +68,42 @@ public class RowNode {
      * Metodi samalla poistaa kaikkien rivin solmujen sarakelinkityksen.
      */
     public void delete() {
-        if (!this.deleted) {
-            this.deleted = true;
-//            if (this.down != null) {
-//                this.down.setUp(this.up);
-//            }
-//            this.up.setDown(this.down);
+        this.deleted = true;
 
-            // poistetaan rivin solujen sarake linkitykset
-            MatrixNode x = this.right;
-            while (x != null) {
-                x.delete();
-                if (x.getDown() != null) {
-                    x.getDown().setUp(x.getUp());
-                }
-                if (x.getUp() != null) {
-                    x.getUp().setDown(x.getDown());
-                } else {
-                    x.getColumn().setDown(x.getDown());
-                }
-                               
-                x = x.getRight();
+        // poistetaan rivin solujen sarake linkitykset
+        MatrixNode x = this.right;
+        while (x != null) {
+            x.delete();
+            if (x.down != null) {
+                x.down.up = x.up;
             }
+            if (x.up != null) {
+                x.up.down = x.down;
+            } else {
+                x.column.down = x.down;
+            }
+
+            x = x.right;
         }
     }
 
     public void undelete() {
         this.deleted = false;
-//        if (this.down != null) {
-//            this.down.setUp(this);
-//        }
-//        this.up.setDown(this);
 
         // palautetaan rivin solujen sarake linkitykset
         MatrixNode x = this.right;
         while (x != null) {
             x.undelete();
-            if (x.getDown() != null) {
-                x.getDown().setUp(x);
+            if (x.down != null) {
+                x.down.up = x;
             }
-            if (x.getUp() != null) {
-                x.getUp().setDown(x);
+            if (x.up != null) {
+                x.up.down = x;
             } else {
-                x.getColumn().setDown(x);
+                x.column.down = x;
             }
             
-            x = x.getRight();
+            x = x.right;
         }
     }
 

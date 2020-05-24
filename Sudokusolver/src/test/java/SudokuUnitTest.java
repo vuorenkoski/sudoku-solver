@@ -160,4 +160,47 @@ public class SudokuUnitTest {
         grid2.insertData(lines);      
         assertTrue(completedGrid.equals(grid2));
     }
+    
+    @Test
+    public void AlgorithmXOk25x25() throws FileNotFoundException {
+        Grid grid = new Grid(5);
+        Scanner fileReader = new Scanner(new File("src/test/5_sudoku2.ss"));
+        String[] lines = new String[29];
+        for (int i = 0; i < 29; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        fileReader.close();
+        grid.insertData(lines);
+        Grid completedGrid = new Grid(5);
+        AlgorithmX.solve(grid, completedGrid);
+        
+        Grid grid2 = new Grid(5);
+        fileReader = new Scanner(new File("src/test/5_sudoku2_complete.ss"));
+        for (int i = 0; i < 29; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        grid2.insertData(lines);      
+        assertTrue(completedGrid.equals(grid2));
+    }
+    
+    @Test
+    public void BruteForceOk25x25() throws FileNotFoundException {
+        Grid grid = new Grid(5);
+        Scanner fileReader = new Scanner(new File("src/test/5_sudoku2.ss"));
+        String[] lines = new String[29];
+        for (int i = 0; i < 29; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        fileReader.close();
+        grid.insertData(lines);
+        BruteForce.solve(grid);
+        
+        Grid grid2 = new Grid(5);
+        fileReader = new Scanner(new File("src/test/5_sudoku2_complete.ss"));
+        for (int i = 0; i < 29; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        grid2.insertData(lines);      
+        assertTrue(grid.equals(grid2));
+    }
 }
