@@ -127,15 +127,15 @@ public class AlgorithmX {
                     int i = (y * gridSize * gridSize) + (x * gridSize);
                     RowNode r = rowArray[i + grid.getCell(x + 1, y + 1) - 1];
                     r.setIncluded(true);
-                    MatrixNode nodex = r.getRight();
-                    while (nodex != null) {
-                        MatrixNode nodey = nodex.getColumn().getDown();
-                        while (nodey != null) {
-                            nodey.getRow().delete();
-                            nodey = nodey.getDown();
+                    MatrixNode nodeX = r.getRight();
+                    while (nodeX != null) {
+                        MatrixNode nodeY = nodeX.getColumn().getDown();
+                        while (nodeY != null) {
+                            nodeY.getRow().delete();
+                            nodeY = nodeY.getDown();
                         }
-                        nodex.getColumn().delete();
-                        nodex = nodex.getRight();
+                        nodeX.getColumn().delete();
+                        nodeX = nodeX.getRight();
                     }
                 }
             }
@@ -182,8 +182,6 @@ public class AlgorithmX {
         //        delete column j from matrix A.
                 if (!x.getColumn().isDeleted()) {
                     x.getColumn().delete();
-//                    deletedColumnPointer.setNextDeleted(x.getColumn());
-//                    deletedColumnPointer = x.getColumn();
                 } 
                 x = x.getRight();
             }
@@ -230,9 +228,6 @@ public class AlgorithmX {
             if (column.size < min) {
                 minColumn = column;
                 min = column.size;
-                if (min == 0) {
-                    return minColumn;
-                }
             }
             column = column.right;
         }

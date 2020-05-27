@@ -176,6 +176,7 @@ public class Grid {
                 }
             }
         }
+        string.append("\n");
         return string.toString();
     }
 

@@ -182,6 +182,21 @@ public class SudokuUnitTest {
         grid2.insertData(lines);      
         assertTrue(completedGrid.equals(grid2));
     }
+
+    @Test
+    public void GridPrintOk() throws FileNotFoundException {
+        Grid grid = new Grid(3);
+        Scanner fileReader = new Scanner(new File("src/test/testLevel17.ss"));
+        String[] lines = new String[11];
+        String output = "";
+        for (int i = 0; i < 11; i++) {
+            lines[i]=fileReader.nextLine();
+            output = output + lines[i] + "\n";
+        }
+        fileReader.close();
+        grid.insertData(lines);
+        assertTrue(grid.toString().equals(output));
+    }
     
     @Test
     public void BruteForceOk25x25() throws FileNotFoundException {

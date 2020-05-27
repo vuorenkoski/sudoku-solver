@@ -42,7 +42,7 @@ Suorituskelpoinen jar-tiedosto
 mvn package
 ```
 
-Ohjelman argumenttina voi antaa syötteen sisältävän tiedoston nimen. Muuten syöte luetaan tiedostosta "sudoku.ss". Tiedosto voi sisältää useamman sudokun. Nämä tulee erotella tyhällä rivillä. Tiedoston ensimmäisellä rivillä on sudokun koko: 3=9x9, 4=16x16, 5=25x25. 
+Ohjelman argumenttina voi antaa syötteen sisältävän tiedoston nimen. Muuten syöte luetaan tiedostosta "sudoku.ss". Tiedosto voi sisältää useamman sudokun. Ennen varsinaista sudokua on rivi joka kertoo sudokun koon: 3=9x9, 4=16x16, 5=25x25. 
 
 Solun vaihtoehdot: 3x3=1..9, 4x4=0..9 ja A..F, 5x5=A..Y
 
