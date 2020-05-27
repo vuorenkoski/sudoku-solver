@@ -8,7 +8,7 @@ Tira-labran harjoitustyö, alkukesä 2020
 
 ## Dokumentaatio
 * [Määrittelydokumentti](dokumentaatio/maarittelydokumentti.md)
-* [Käyttöohje](dokumentaatio/maarittelydokumentti.md)
+* [Käyttöohje](dokumentaatio/kaytto-ohje.md)
 
 ## Komentorivitoiminnot
 
