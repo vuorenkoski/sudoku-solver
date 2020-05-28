@@ -6,7 +6,6 @@ package fi.vuorenkoski.sudokusolver;
  */
 public class RowNode {
     public MatrixNode right;
-    private RowNode up;
     private RowNode down;
     private RowNode nextDeleted;
     private boolean deleted;
@@ -15,7 +14,6 @@ public class RowNode {
 
     public RowNode(int number) {
         this.down = null;
-        this.up = null;
         this.right = null;
         this.nextDeleted = null;
         this.deleted = false;
@@ -25,10 +23,6 @@ public class RowNode {
     
     public MatrixNode getRight() {
         return right;
-    }
-
-    public RowNode getUp() {
-        return up;
     }
 
     public RowNode getDown() {
@@ -53,10 +47,6 @@ public class RowNode {
 
     public void setRight(MatrixNode right) {
         this.right = right;
-    }
-
-    public void setUp(RowNode up) {
-        this.up = up;
     }
 
     public void setDown(RowNode down) {

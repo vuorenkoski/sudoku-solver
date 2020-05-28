@@ -2,18 +2,6 @@ package fi.vuorenkoski.sudokusolver;
 
 import java.text.DecimalFormat;
 
-// https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X
-//
-//    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
-//    2. Otherwise choose a column c (deterministically).
-//    3. Choose a row r such that A(r, c) = 1 (nondeterministically).
-//    4. Include row r in the partial solution.
-//    5. For each column j such that A(r, j) = 1,
-//        for each row i such that A(i, j) = 1,
-//            delete row i from matrix A.
-//        delete column j from matrix A.
-//    6. Repeat this algorithm recursively on the reduced matrix A.
-
 /**
  * Luokan metodit toteuttavat Algotirithm X haun.
  * @author Lauri Vuorenkoski
@@ -32,13 +20,10 @@ public class AlgorithmX {
         System.out.println("Algoritmi: Algorithm X");
         double time = (double) System.nanoTime() / 1000000;
 
-        // Luodaan taulukko Täydellistä peitettä varten
-        int[][] constraintTable = createConstraintTable(grid);
-
-        // Luodaan taulukon perusteella matriisi jonka solut linkitetty vertikaalisesti ja horisontaalisesti 
+        // Valmistellaan matriisi
         RowNode rowRoot = new RowNode(0);
         ColumnNode columnRoot = new ColumnNode(0);
-        createMatrix(constraintTable, grid, rowRoot, columnRoot);
+        createMatrix(grid, rowRoot, columnRoot);
         System.out.println("  Valmistelu (ms):" + DF3.format((double) System.nanoTime() / 1000000 - time));
         
         // Matriisin avulla käydään läpi Algorithmx
@@ -61,19 +46,21 @@ public class AlgorithmX {
     }
 
     /**
-     * Metodi luo taulukosta kahteen suuntaan linkitetyn listan niin riveittän kuin sarakkeittain. 
+     * Metodi luo Sudoku-ruudukon perusteella täydellisen peitteen matriisi, jonka solut linkitetty vertikaalisesti ja horisontaalisesti.
      * 
      */
-    private static void createMatrix(int[][] table, Grid grid, RowNode rowRoot, ColumnNode columnRoot) {
+    private static void createMatrix(Grid grid, RowNode rowRoot, ColumnNode columnRoot) {
         ColumnNode[] columnArray = new ColumnNode[grid.getGridSize() * grid.getGridSize() * 4];
         MatrixNode[] columnBottomArray = new MatrixNode[grid.getGridSize() * grid.getGridSize() * 4];
         RowNode[] rowArray = new RowNode[grid.getGridSize() * grid.getGridSize() * grid.getGridSize()];
         ColumnNode cPrevious = columnRoot;
         RowNode rPrevious = rowRoot;
-        MatrixNode rmPrevious = null;
-        int gridSize = grid.getGridSize();
+
+        int size = grid.getSize();
+        int gridSize = size * size;
+        int dataSize = gridSize * gridSize;
         
-        // luodaan sarakkeista linkitetty lista ja taulukko
+        // luodaan sarakkeista kahteen suuntaan linkitetty lista ja aputaulukko
         for (int i = 0; i < gridSize * gridSize * 4; i++) {
             cPrevious.setRight(new ColumnNode(i));
             cPrevious.getRight().setLeft(cPrevious);
@@ -81,45 +68,39 @@ public class AlgorithmX {
             columnArray[i] = cPrevious;
         }
         
-        // luodaan rivestä linkitetty lista
+        // luodaan riveistä yhteen suuntaan linkitetty lista ja aputaulukko
         for (int i = 0; i < gridSize * gridSize * gridSize; i++) {
             rPrevious.setDown(new RowNode(i));
-            rPrevious.getDown().setUp(rPrevious);
             rPrevious = rPrevious.getDown();
             rowArray[i] = rPrevious;
         }
         
-        // Luodaan linkitetyt listat riveittäin ja sarakkeittain
         rPrevious = rowRoot;
-        for (int y = 0; y < gridSize * gridSize * gridSize; y++) {
-            rPrevious = rPrevious.getDown();
-            rmPrevious = null;
-            for (int x = 0; x < gridSize * gridSize * 4; x++) {
-                if (table[y][x] == 1) {
-                    MatrixNode node = new MatrixNode(columnArray[x], rowArray[y]);
-                    
-                    // Rivin linkitys solujen linkitys keskenään
-                    if (rmPrevious == null) {
-                        rPrevious.setRight(node);
-                    } else {
-                        rmPrevious.setRight(node);
-                        node.setLeft(rmPrevious);
-                    }
-                    rmPrevious = node;
-                    
-                    // Sarakkeen solujen linkitys keskenään
-                    if (columnBottomArray[x] == null) {
-                        columnArray[x].setDown(node);
-                        columnBottomArray[x] = node;
-                    } else {
-                        columnBottomArray[x].setDown(node);
-                        node.setUp(columnBottomArray[x]);
-                        columnBottomArray[x] = node;
+        for (int y = 0; y < gridSize; y++) {
+            for (int x = 0; x < gridSize; x++) {
+                for (int value = 0; value < gridSize; value++) {
+                    rPrevious = rPrevious.getDown();
+                    if (grid.getCell(x + 1, y + 1) == 0 || grid.getCell(x + 1, y + 1) == value + 1) {
+                        // rajoite: yksi luku solua kohden
+                        rPrevious.setRight(new MatrixNode(columnArray[(y * gridSize) + x], rPrevious));
+                        insertColumnLinks(rPrevious.getRight(), columnBottomArray);
+                        // rajoite: yksi luku riviä kohden
+                        MatrixNode node = rPrevious.getRight();
+                        node.setRight(new MatrixNode(columnArray[dataSize + (y * gridSize) + value], rPrevious));
+                        insertColumnLinks(node.getRight(), columnBottomArray);
+                        // rajoite: yksi luku saraketta kohden
+                        node = node.getRight();
+                        node.setRight(new MatrixNode(columnArray[2 * dataSize + (x * gridSize) + value], rPrevious));
+                        insertColumnLinks(node.getRight(), columnBottomArray);
+                        // rajoite: yksi luku ryhmää kohden
+                        node = node.getRight();
+                        node.setRight(new MatrixNode(columnArray[3 * dataSize + ((y / size) * size + (x / size)) * gridSize + value], rPrevious));
+                        insertColumnLinks(node.getRight(), columnBottomArray);
                     }
                 }
-            }  
+            }
         }
-        
+               
         // Valmiiden solujen osalta poistetaan turhat rivit ja lisätään included merkintä
         for (int y = 0; y < gridSize; y++) {
             for (int x = 0; x < gridSize; x++) {
@@ -142,10 +123,22 @@ public class AlgorithmX {
         }
     }
     
+    private static void insertColumnLinks(MatrixNode node, MatrixNode[] columnBottomArray) {
+        int column = node.getColumn().getNumber();
+        if (columnBottomArray[column] == null) {
+            node.getColumn().setDown(node);
+            columnBottomArray[column] = node;
+        } else {
+            columnBottomArray[column].setDown(node);
+            node.setUp(columnBottomArray[column]);
+            columnBottomArray[column] = node;
+        }
+    }
+    
     /**
      * Metodi ratkaisee linkkimatriisin kuvamaan täydellisen peitteen ongelman.
      * Metodi palauttaa true jos ratkaisu löytyi, muuten false
-     * Vastaus on ne rivisolmut, joiden status on  "included"
+     * Täydellisen peitteen muodostaa ne rivisolmut, joiden status on  "included"
      */
     private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot) {      
         RowNode deletedRows = new RowNode(0);
@@ -249,52 +242,4 @@ public class AlgorithmX {
             row = row.getDown();
         }
     }
-
-    /**
-     * Metodi luo sudokusta 2d taulukon, jossa on kuvattu sodukun rajoite-säännöt.
-     * Metodi ottaa huomioon sudokun valmiiksi täytetyt ruudut.
-     */    
-    private static int[][] createConstraintTable(Grid grid) {
-        int size = grid.getSize();
-        int gridSize = size * size;
-        int dataSize = gridSize * gridSize;
-        
-        int[][] table = new int[dataSize * gridSize][dataSize * 4];
-        for (int i = 0; i < dataSize * gridSize; i++) {
-            for (int j = 0; j < dataSize * 4; j++) {
-                table[i][j] = 0;
-            }
-        }
-        
-        for (int y = 0; y < gridSize; y++) {
-            for (int x = 0; x < gridSize; x++) {
-                for (int value = 0; value < gridSize; value++) {
-                    if (grid.getCell(x + 1, y + 1) == 0 || grid.getCell(x + 1, y + 1) == value + 1) {
-                        // rajoite: yksi luku solua kohden
-                        table[(y * dataSize) + (x * gridSize) + value][(y * gridSize) + x] = 1;
-                        // rajoite: yksi luku riviä kohden
-                        table[(y * dataSize) + (x * gridSize) + value][dataSize + (y * gridSize) + value] = 1;
-                        // rajoite: yksi luku saraketta kohden
-                        table[(y * dataSize) + (x * gridSize) + value][2 * dataSize + (x * gridSize) + value] = 1;
-                        // rajoite: yksi luku ryhmää kohden
-                        table[(y * dataSize) + (x * gridSize) + value][3 * dataSize + ((y / size) * size + (x / size)) * gridSize + value] = 1;
-                    }
-                }
-            }
-        }
-        return table;
-    }
-    
-//    private static void printTable(int[][] table) {
-//        for (int i = 0; i < 81 * 9; i++) {
-//            for (int j = 0; j < 81 * 4; j++) {
-//                if (table[i][j] == 1) {
-//                    System.out.print("x");
-//                } else {
-//                    System.out.print(".");                    
-//                }
-//            }
-//            System.out.println("");
-//        }
-//    }
 }

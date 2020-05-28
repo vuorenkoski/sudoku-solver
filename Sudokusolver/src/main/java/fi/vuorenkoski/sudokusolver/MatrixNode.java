@@ -7,7 +7,6 @@ package fi.vuorenkoski.sudokusolver;
 public class MatrixNode {
     public MatrixNode up;
     public MatrixNode down;
-    public MatrixNode left;
     public MatrixNode right;
     public ColumnNode column;
     public RowNode row;
@@ -16,7 +15,6 @@ public class MatrixNode {
     public MatrixNode(ColumnNode column, RowNode row) {
         this.up = null;
         this.down = null;
-        this.left = null;
         this.right = null;
         this.deleted = false;
         this.column = column;
@@ -30,10 +28,6 @@ public class MatrixNode {
 
     public MatrixNode getDown() {
         return down;
-    }
-
-    public MatrixNode getLeft() {
-        return left;
     }
 
     public MatrixNode getRight() {
@@ -54,10 +48,6 @@ public class MatrixNode {
 
     public void setDown(MatrixNode down) {
         this.down = down;
-    }
-
-    public void setLeft(MatrixNode left) {
-        this.left = left;
     }
 
     public void setRight(MatrixNode right) {
