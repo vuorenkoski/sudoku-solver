@@ -114,14 +114,13 @@ public class Grid {
     public boolean checkCell(int x, int y) {
         x--;
         y--;
-        boolean ok = true;
         int number = this.data[x + y * this.gridSize];
         for (int i = 0; i < this.gridSize; i++) {
             if (i != y && this.data[x + i * this.gridSize] == number) {
-                ok = false;
+                return false;
             } 
             if (i != x && this.data[i + y * this.gridSize] == number) {
-                ok = false;
+                return false;
             }
         }
         int yy = y - y % this.size;
@@ -130,11 +129,11 @@ public class Grid {
         for (int i = yy; i < yy + this.size; i++) {
             for (int j = xx; j < xx + this.size; j++) {
                 if (i != y && j != x && this.data[i * this.gridSize + j] == number) {
-                    ok = false;
+                    return false;
                 }
             }
         }
-        return ok;
+        return true;
     }
     
     @Override

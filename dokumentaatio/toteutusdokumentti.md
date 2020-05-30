@@ -3,17 +3,19 @@
 ## Ohjelman yleisrakenne
 Ohjelman Main-luokka toteuttaa tiedoston lukemisen ja kahden algoritmin (Algorithm X ja Brute-Forece) suorittamisen yksi kerrallaan jokaiselle tiedostossa olevalle sudokulle. 
 
+Grid -luokan olio kuvaa sudoku-ruudukkoa.
+
+BruteFore -luokan metodit toteuttaa BruteForce haun, joska myös hyödyntää Grid-luokan metodia checkCell. AlgorithmX -luokan metodit toteuttavat Algorithm X haun.
+
 ### Brute-Force
-Tämä algoritmi käy läpi rekursiivisesti syvyyshaulla kaikki sudokun tyhjät ruudut. Syvyyshaussa sudokun tyhjiä soluja lähdetään täyttämään vasemmasta yläkulmasta riveittäin. Pienimmästä numerosta suurimpaan. Yhden haaran haku pysähtyy, mikäli seuraavaan soluun ruutuun ei voi lisätä mitään numeroa (tarkistetaan ettei samaa numeroa ole ryhmässä, rivillä tai sarakkeessa). Haku päättyy kun kaikkiin soluihin on saatu numero.
+Tämä algoritmi käy läpi rekursiivisesti syvyyshaulla kaikki sudokun tyhjät ruudut. Syvyyshaussa sudokun tyhjiä soluja lähdetään täyttämään vasemmasta yläkulmasta riveittäin. Pienimmästä numerosta suurimpaan. Yhden haaran haku pysähtyy, mikäli seuraavaan soluun ruutuun ei voi lisätä mitään numeroa (jokaisen numeron osalta tarkistetaan ettei samaa numeroa ole ryhmässä, rivillä tai sarakkeessa). Haku päättyy kun kaikkiin soluihin on saatu numero.
 
-Algortimin nopeus riippuu huomattavassa määrin sattumasta. Jos ruudukon alussa on paljon tyhjiä ruutuja joihin on monta vaihtoehtoa, syntyy syvyyshaun juureen monia raskaasti läpikäytäviä haaroja.
-
-Yksinkertainen algoritmi on toteutettu BruteForce-luokkaan.
+Algoritmin nopeus riippuu huomattavassa määrin sattumasta. Jos ruudukon alussa on paljon tyhjiä ruutuja joihin on monta vaihtoehtoa, syntyy syvyyshaun juureen monia raskaasti läpikäytäviä haaroja.
 
 ### Algorithm X
 Tässä algoritmissa sudoku ratkaistaan siten, että se kuvataan [täydellinen peite -ongelmana](https://en.wikipedia.org/wiki/Exact_cover). Täydellinen peite etsitään [Knuths Algorithm X](https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X) -agoritmilla.
 
-**Täydellinen peite -ongelmassa** pyritään löytämään sellainen joukon osajoukkojen kombinaatio, jossa jokainen solu on edustettu yhden ja vain yhden kerran.
+**Täydellinen peite -ongelmassa** pyritään löytämään sellainen joukon osajoukkojen kombinaatio, jossa jokainen joukon alkio on edustettu yhden ja vain yhden kerran.
 
 Kun sudoku kuvataan täydellinen peite -ongelmana, on osajoukkoina jokaisen solun jokainen mahdollinen numero. Tyhjässä sudokussa osajoukkoja on siten 9x9x9 = 729. 
 
@@ -31,40 +33,48 @@ Jokainen osajoukko kuvaa siis yhtä vaihtoehtoa (esimerkiksi rivin 2 sarakkeessa
 
 Tämän avulla luodaan binääritaulukko jossa on 729 riviä ja 324 saraketta. Rivit on vaihtoehtoja ja sarakkeet rajoitteita. Täydellinen peite on siis sellainen joukko rivejä, joissa yhteensä esiintyy jokainen sarake täsmälleen kerran.
 
-Tässä ohjelmassa taulukko on toteutettu linkitettyinä listoina. Jokainen täysi solu on linkitetty vasempaan, oikeaan, alempaan ja ylempään täyteen soluun. Tyhjät solmut on jätetty taulukosta kokonaan pois.
+Tässä ohjelmassa taulukko on toteutettu linkitettyinä listoina. Jokainen täysi solu on linkitetty oikeaan, alempaan ja ylempään täyteen soluun. Tyhjät solmut on jätetty taulukosta kokonaan pois.
 
-Tämä ratkaisu antaa kaksi etua: taulukon koko on pienempi, koska tyhjät solut eivät vie tilaa. Taulukkossa suurin osa soluista on tyhjä. Toisekseen tämä antaa mahdollisuuden tehokkaasti poistaa ja palauttaa soluja taulukkoon, joka on keskeistä AlgorithmX:lle.
+<img src="nodematrix.png">
 
-**AlgorithmX** toimii rekursiivisesti. Sille annetaan taulukko. Jos taulukossa ei ole ollenkaan sarakkeita (eli kaikki sarakkeet on jo ratkaisussa), täydellinen peite on löydetty.
+Tämä ratkaisu antaa kaksi etua: taulukon koko on pienempi, koska tyhjät solut eivät vie tilaa. Taulukkossa suurin osa soluista on tyhjä. Toisekseen tämä antaa mahdollisuuden tehokkaasti poistaa ja palauttaa soluja taulukkoon, joka on keskeistä Algorithm X:lle.
+
+**Algorithm X** toimii rekursiivisesti. Sille annetaan taulukko. Jos taulukossa ei ole ollenkaan sarakkeita (eli kaikki sarakkeet on jo ratkaisussa), täydellinen peite on löydetty.
 
 Muuten valitaan sarake, jossa on vähiten soluja. Jos sarake on tyhjä, täydellistä peitettä ei voida tällä osaratkaisulla saavuttaa. Kaydään läpi kaikki rivit joissa esiintyy tämän sarakkeen solu.
 
 Jokaisen tällaisen rivin osalta tehdään seuraava: Otetaan rivi osaksi ratkaisua. Poistetaan taulukosta kaikki sarakkeet joissa esiintyy rivin solu. Poistetaan myös kaikki rivit joissa esiintyy jokin näistä sarakkeista. Lopuksi annetaan tämä karsittu taulukko rekursiivisesti algoritmin syötteeksi. 
 
-Algoritmin kuvaus Wikipipediasta (https://en.wikipedia.org/wiki/Sudoku_solving_algorithms): 
+Algoritmin kuvaus Wikipipediasta (https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X): 
 
-    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
-    2. Otherwise choose a column c (deterministically).
-    3. Choose a row r such that A(r, c) = 1 (nondeterministically).
-    4. Include row r in the partial solution.
-    5. For each column j such that A(r, j) = 1,
-        for each row i such that A(i, j) = 1,
-            delete row i from matrix A.
-        delete column j from matrix A.
-    6. Repeat this algorithm recursively on the reduced matrix A.
+```
+1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
+2. Otherwise choose a column c (deterministically).
+3. Choose a row r such that A(r, c) = 1 (nondeterministically).
+4. Include row r in the partial solution.
+5. For each column j such that A(r, j) = 1,
+    for each row i such that A(i, j) = 1,
+        delete row i from matrix A.
+    delete column j from matrix A.
+6. Repeat this algorithm recursively on the reduced matrix A.
+```
 
-
-## Saavutetut aika- ja tilavaativuudet (m.m. O-analyysit pseudokoodista)
+## Saavutetut aika- ja tilavaativuudet
+Keskeinen vaativuutta määrittelemä tekijä on tyhjien solujen määrä (n). Toinen tärkeä tekijä on ruudukon koko (k).
 
 ### Brute-force
-**Tilavaatimus** on varsin pieni. Algoritmi vaatii yhden Grid tyyppisen olion. Funktio kutsutaan rekursiivisesti  n kertaa (n=tyhjien solujen määrä).
+**Tilavaatimus** on varsin pieni. Algoritmi vaatii yhden Grid tyyppisen olion. Funktio kutsutaan rekursiivisesti enintään n kertaa yhtä aikaa. Tilavaativuus siis riippuu tyhjien solujen määrästä ja on luokkaa O(n)?
 
-Brute-force algoritmin aikavaativuus riippuu tyhjien solujen lukumäärästä (n). Teoriassa vaatuivuus on kai O(9^n), mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti
+Brute-force algoritmin **aikavaativuus** riippuu tyhjien solujen lukumäärästä. Teoriassa kokeiluja joudutaan tekemään huonoimmassa tapauksessa k^n kertaa, mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti. Jokaisen luvun kokoeileminen vaatii maksimissaan 3k tarkistusta (esiintyykö luku jo samalla rivillä, sarakkeessa tai ryhmässä). Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
 
 ### Algortihm X
+**Tilavaatimus** on maltillinen. Matriisi vie tilaa k³*4. Rekursiivinen funktion kutsu enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
+
+Algoritmin **aikavaativuus** rippuu eniten tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
 
 ## Suorituskyky- ja O-analyysivertailu
-
+**Tilavaativuudeltaan** Brute-Force tilavaativuus on pienempi. Ruudukon koon mukaan tilavaativuus on sillä O(n²). AlgorithmX tilavaativuus on O(n³).
+**aikavaativuudeltaan** algoritmit ovat samaa luokkaa O(2^n), mutta Algorithm X on käytännössä huomattavasti tehokkaampi. Tehokkuutta tuo ainakin se, että algoritmi tekee valinnan seuraavaksi kokeiltavaksi ruuduksi sen johon on vähiten vaihtoehtoja, jolloin syvyyshaunon kevvyempi. Se myös tehokkaammin havaitsee mitkä ovat mahdollisia vaihtoehtoja solun arvoksi. 
 
 ## Työn mahdolliset puutteet ja parannusehdotukset
 
