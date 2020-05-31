@@ -23,7 +23,7 @@ Testiaineisto on kansiossa "testidata". Siellä on lisäksi tiedosto johon on li
 Testipaketin voi toistaa esimerkiksi näin:
 
 ```
-java -jar target/Sudokusolver-1.0-SNAPSHOT.jar 3_100sudokua64.ss
+java -jar target/Sudokusolver-1.0-SNAPSHOT.jar testidata/3_100sudokua64.ss
 ```
 
 ## Ohjelman toiminnan empiirisen testauksen tulosten esittäminen graafisessa muodossa.

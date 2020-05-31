@@ -1,7 +1,7 @@
 package fi.vuorenkoski.sudokusolver;
 
 /**
- * Matriisin rivi, joka on linkitetty alempaan ja ylempään riviin sekä rivin ensimmäiseen solmuun
+ * Matriisin rivi, joka on linkitetty alempaan riviin ja rivin ensimmäiseen solmuun
  * @author Lauri Vuorenkoski
  */
 public class RowNode {

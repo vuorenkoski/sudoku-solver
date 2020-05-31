@@ -10,7 +10,7 @@ public class AlgorithmX {
     private static final DecimalFormat DF3 = new DecimalFormat("#.###");
 
     /**
-     * Metodi ratkaisee taulukon.Metodi täydentää parametrinaan saamansa taulukon. 
+     * Metodi ratkaisee sudokun. Metodi täydentää parametrinaan saamansa sudokun. 
      * 
      * @param grid Ratkaistava sudoku 
      * @param completedGrid Metodi täyttää tähän sudokun ratkaisun

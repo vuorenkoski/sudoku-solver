@@ -1,7 +1,7 @@
 package fi.vuorenkoski.sudokusolver;
 
 /**
- * Matriisin solmu, joka on linkitetty ylempään, alempaan, vasempaan ja oikeaan solmuun
+ * Matriisin solmu, joka on linkitetty ylempään, alempaan ja oikeaan solmuun
  * @author Lauri Vuorenkoski
  */
 public class MatrixNode {
