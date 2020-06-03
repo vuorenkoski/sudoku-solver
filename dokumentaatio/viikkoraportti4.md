@@ -11,7 +11,7 @@
 * Brute-force algoritmia optimoitiin (Grid.checkCell). 100 sudokun testin nopeus parani (4.8s --> 1.9s). Ero parempaan algoritmiin on silti suuri (1.9s vs. 0.5ms).
 
 ## Mitä opin
-* 
+* Koodin optimointia ja nopeuden testaamista
 
 ## Epäselvää
 
