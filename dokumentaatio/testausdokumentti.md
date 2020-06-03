@@ -32,10 +32,10 @@ Suoritusajat (yksi sudoku keskimäärin). Testikone: AMD Ryzen 5 2600X, Kubuntu 
 
 | koko | tyhjat solut | lukumäärä  | Brute-Force | Algorithm X  | 
 | :----:|:-----| :-----|:-----| :-----|
-|9x9|48|5|0,36ms|1,51ms|
-|9x9|55|5|3,0ms|1,35ms|
-|9x9|64|5|6,1s|2,1ms|
-|9x9|64|100|4,8s|0,51ms|
+|9x9|48|6|0,26ms|1,65ms|
+|9x9|55|7|3,0ms|1,35ms|
+|9x9|64|6|6,0s|1,9ms|
+|9x9|64|100|1,9s|0,51ms|
 |16x16|163|1|ei ratkea|8,3ms|
 |25x25|271|1|1,19s|17ms|
 |25x25|372|1|ei ratkea|ei ratkea|
