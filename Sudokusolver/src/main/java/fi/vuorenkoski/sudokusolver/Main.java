@@ -32,7 +32,7 @@ public class Main {
             boolean differences = false;
             while (fileReader.hasNextLine()) {
                 int size = Integer.valueOf(fileReader.nextLine());
-                System.out.println("Sudokujen koko: " + size * size + "x" + size * size);  
+                System.out.println("Sudokun koko: " + size * size + "x" + size * size);  
                 line = fileReader.nextLine();
                 if (!line.isEmpty()) {
                     String[] lines = new String[size * size + size - 1];
@@ -48,9 +48,7 @@ public class Main {
                     // ratkaiseminen
                     System.out.println("SUDOKU " + count);
                     System.out.println("Tyhjat ruudut: " + grid.numberOfEmptyCells());
-//                    System.out.println(grid);
                     sumX += AlgorithmX.solve(grid, completedGrid);
-//                    System.out.println(completedGrid);
                     sumBrute += BruteForce.solve(grid);
                     if (grid.equals(completedGrid)) {
                         System.out.println("Ratkaisut on identtiset");

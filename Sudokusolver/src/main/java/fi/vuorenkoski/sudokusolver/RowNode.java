@@ -6,11 +6,11 @@ package fi.vuorenkoski.sudokusolver;
  */
 public class RowNode {
     public MatrixNode right;
-    private RowNode down;
-    private RowNode nextDeleted;
-    private boolean deleted;
-    private boolean included;
-    private int number;
+    public RowNode down;
+    public RowNode nextDeleted;
+    public boolean deleted;
+    public boolean included;
+    public int number;
 
     public RowNode(int number) {
         this.down = null;
@@ -21,38 +21,6 @@ public class RowNode {
         this.number = number;
     }
     
-    public MatrixNode getRight() {
-        return right;
-    }
-
-    public RowNode getDown() {
-        return down;
-    }
-
-    public RowNode getNextDeleted() {
-        return nextDeleted;
-    }
-    
-    public int getNumber() {
-        return number;
-    }
-    
-    public boolean isIncluded() {
-        return included;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setRight(MatrixNode right) {
-        this.right = right;
-    }
-
-    public void setDown(RowNode down) {
-        this.down = down;
-    }
-
     /**
      * Metodi poistaa kyseisen rivin matriisista. 
      * Metodi samalla poistaa kaikkien rivin solmujen sarakelinkityksen.
@@ -95,13 +63,5 @@ public class RowNode {
             
             x = x.right;
         }
-    }
-
-    public void setIncluded(boolean included) {
-        this.included = included;
-    }
-
-    public void setNextDeleted(RowNode nextDeleted) {
-        this.nextDeleted = nextDeleted;
     }
 }

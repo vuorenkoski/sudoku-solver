@@ -4,100 +4,77 @@ package fi.vuorenkoski.sudokusolver;
  * Matriisin sarake, joka on linkitetty vasempaan ja oikeaan sarakkeeseen sekä sarakkeen ensimmäiseen soluun
  * @author Lauri Vuorenkoski
  */
-public class ColumnNode implements Comparable<ColumnNode> {
+public class ColumnNode {
     public MatrixNode down;
-    private ColumnNode left;
+    public ColumnNode left;
     public ColumnNode right;
-    private ColumnNode nextDeleted;
-    private boolean deleted;
-    private int number;
+    public ColumnNode nextInSizegroup;
+    public ColumnNode previousInSizegroup;
+    public boolean deleted;
+    public int number;
     public int size;
+    private ColumnNode columnSizeGroups[];
 
-    public ColumnNode(int number) {
+    public ColumnNode(int number, ColumnNode columnSizeGroups[]) {
         this.down = null;
         this.left = null;
         this.right = null;
-        this.nextDeleted = null;
         this.deleted = false;
         this.number = number;
         this.size = 0;
-    }
+        this.columnSizeGroups = columnSizeGroups;
 
-    public MatrixNode getDown() {
-        return down;
-    }
-
-    public ColumnNode getRight() {
-        return right;
-    }
-
-    public ColumnNode getNextDeleted() {
-        return nextDeleted;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-    
-    public boolean isDeleted() {
-        return deleted;
-    }
-    
-    public void setDown(MatrixNode down) {
-        this.down = down;
-    }
-
-    public void setLeft(ColumnNode left) {
-        this.left = left;
-    }
-
-    public void setRight(ColumnNode right) {
-        this.right = right;
+        if (columnSizeGroups != null) {
+            insertToSizegroup();
+        } else {
+            this.nextInSizegroup = null;
+        }
     }
 
     public void delete() {
+        removeFromSizegroup();
         this.deleted = true;
         if (this.right != null) {
-            this.right.setLeft(this.left);
+            this.right.left = this.left;
         }
-        this.left.setRight(this.right);
+        this.left.right = this.right;
     }
 
     public void undelete() {
         this.deleted = false;
         if (this.right != null) {
-            this.right.setLeft(this);
+            this.right.left = this;
         }
-        this.left.setRight(this);
+        this.left.right = this;
+        insertToSizegroup();
     }
 
-    public void setNextDeleted(ColumnNode nextDeleted) {
-        this.nextDeleted = nextDeleted;
-    }
-    
-    public void increseSize() {
+    public void increaseSize() {
+        removeFromSizegroup();
         this.size++;
+        insertToSizegroup();
     }
     
-    public void decreseSize() {
+  
+    public void decreaseSize() {
+        removeFromSizegroup();
         this.size--;
+        insertToSizegroup();
     }
-
-    @Override
-    public int compareTo(ColumnNode t) {
-        if (this.deleted) {
-            if (t.isDeleted()) {
-                return 0;
-            }
-            return 1;
+    
+    private void removeFromSizegroup() {
+        if (this.size < 3) {
+            this.previousInSizegroup.nextInSizegroup = this.nextInSizegroup;
+            if (this.nextInSizegroup != null) this.nextInSizegroup.previousInSizegroup = this.previousInSizegroup;
         }
-        if (t.isDeleted()) {
-            return -1;
+    }
+    
+    private void insertToSizegroup() {
+        if (this.size < 3) {
+            this.previousInSizegroup = columnSizeGroups[this.size];
+            this.nextInSizegroup = columnSizeGroups[this.size].nextInSizegroup;
+            columnSizeGroups[this.size].nextInSizegroup = this;
+            if (this.nextInSizegroup != null) this.nextInSizegroup.previousInSizegroup = this;
         }
-        return this.size - t.getSize();
     }
 }
