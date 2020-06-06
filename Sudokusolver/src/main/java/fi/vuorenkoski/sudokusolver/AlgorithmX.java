@@ -8,6 +8,10 @@ import java.text.DecimalFormat;
  */
 public class AlgorithmX {
     private static final DecimalFormat DF3 = new DecimalFormat("#.###");
+    private static int branch;
+    private static RowNode rowRoot;
+    private static ColumnNode columnRoot;
+    private static ColumnNode columnSizeGroups[];
 
     /**
      * Metodi ratkaisee sudokun. Metodi täydentää parametrinaan saamansa sudokun. 
@@ -21,24 +25,25 @@ public class AlgorithmX {
         double time = (double) System.nanoTime() / 1000000;
 
         // Valmistellaan matriisi
-        ColumnNode columnSizeGroups[] = new ColumnNode[3];
-        for (int i=0;i<3;i++) {
-            columnSizeGroups[i]=new ColumnNode(0, null);
+        columnSizeGroups = new ColumnNode[3];
+        for (int i = 0; i < 3; i++) {
+            columnSizeGroups[i] = new ColumnNode(0, null);
         }
-        RowNode rowRoot = new RowNode(0);
-        ColumnNode columnRoot = new ColumnNode(0, null);
-        createMatrix(grid, rowRoot, columnRoot, columnSizeGroups);
+        rowRoot = new RowNode(0);
+        columnRoot = new ColumnNode(0, null);
+        createMatrix(grid);
         System.out.println("  Valmistelu (ms):" + DF3.format((double) System.nanoTime() / 1000000 - time));
         
         // Matriisin avulla käydään läpi Algorithmx
-        if (solveExactCover(rowRoot, columnRoot, columnSizeGroups, 0)) {
+        branch = 0;
+        if (solveExactCover()) {
             System.out.println("  Vastaus löytyi");
         } else {
             System.out.println("  Vastausta ei löytynyt");
         }
-        
+        System.out.println("  Haarautumia: " + branch);
         // Luodaan vastaus
-        fillGrid(completedGrid, rowRoot);
+        fillGrid(completedGrid);
 
         time = (double) System.nanoTime() / 1000000 - time;
         if (time < 1000) { 
@@ -53,7 +58,7 @@ public class AlgorithmX {
      * Metodi luo Sudoku-ruudukon perusteella täydellisen peitteen matriisi, jonka solut linkitetty vertikaalisesti ja horisontaalisesti.
      * 
      */
-    private static void createMatrix(Grid grid, RowNode rowRoot, ColumnNode columnRoot, ColumnNode columnSizes[]) {
+    private static void createMatrix(Grid grid) {
         ColumnNode[] columnArray = new ColumnNode[grid.getGridSize() * grid.getGridSize() * 4];
         MatrixNode[] columnBottomArray = new MatrixNode[grid.getGridSize() * grid.getGridSize() * 4];
         RowNode[] rowArray = new RowNode[grid.getGridSize() * grid.getGridSize() * grid.getGridSize()];
@@ -66,7 +71,7 @@ public class AlgorithmX {
         
         // luodaan sarakkeista kahteen suuntaan linkitetty lista ja aputaulukko
         for (int i = 0; i < gridSize * gridSize * 4; i++) {
-            cPrevious.right = new ColumnNode(i, columnSizes);
+            cPrevious.right = new ColumnNode(i, columnSizeGroups);
             cPrevious.right.left = cPrevious;
             cPrevious = cPrevious.right;
             columnArray[i] = cPrevious;
@@ -140,16 +145,13 @@ public class AlgorithmX {
     }
     
     /**
-     * Metodi ratkaisee linkkimatriisin kuvamaan täydellisen peitteen ongelman.Metodi palauttaa true jos ratkaisu löytyi, muuten false
- Täydellisen peitteen muodostaa ne rivisolmut, joiden status on  "included"
-     * @param rowRoot Rivisolmujen juuri
-     * @param columnRoot Sarakesolmujen juuri
-     * @param columnSizeGroups Sarakesolmujen kokojoukkojen juurisolmut 
-     * @return 
+     * Metodi ratkaisee linkkimatriisin kuvamaan täydellisen peitteen ongelman.
+     * Täydellisen peitteen muodostaa ne rivisolmut, joiden status on  "included"
+     * @return Metodi palauttaa true jos ratkaisu löytyi, muuten false
      */
-    private static boolean solveExactCover(RowNode rowRoot, ColumnNode columnRoot, ColumnNode columnSizeGroups[], int syvyys) {      
+    private static boolean solveExactCover() {      
         RowNode deletedRowsRoot = new RowNode(0);
-        RowNode deletedRowPointer = deletedRowsRoot;
+        RowNode deletedRowPointer;
 
         //    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
         if (columnRoot.right == null) {
@@ -158,15 +160,16 @@ public class AlgorithmX {
         //    2. Otherwise choose a column c (deterministically).
         
         ColumnNode c;
-        if (columnSizeGroups[0].nextInSizegroup!=null) {
+        if (columnSizeGroups[0].nextInSizegroup != null) {
             return false;
         }
-        if (columnSizeGroups[1].nextInSizegroup!=null) {
+        if (columnSizeGroups[1].nextInSizegroup != null) {
             c = columnSizeGroups[1].nextInSizegroup;
         } else {
-//            System.out.println(syvyys);
             c = columnSizeGroups[2].nextInSizegroup;
-//            if (c==null) System.out.println("ONGELMA!");
+            if (c == null) { // ei pitäisi sattua, mutta jos ei ole 0-2 solun sarakkeita, otetaan ensimmäinen sarake
+                c = columnRoot.right;
+            }
         }
         
         //    3. Choose a row r such that A(r, c) = 1 (nondeterministically).        
@@ -178,52 +181,47 @@ public class AlgorithmX {
             
         //    5. For each column j such that A(r, j) = 1,
             MatrixNode x = r.right;
+            deletedRowPointer = deletedRowsRoot;
             while (x != null) {
         //        for each row i such that A(i, j) = 1,
                 MatrixNode y = x.column.down;
                 while (y != null) {
         //            delete row i from matrix A.
-                    if (!y.row.deleted) {
-                        y.row.delete();
-                        deletedRowPointer.nextDeleted = y.row;
-                        deletedRowPointer = y.row;
-                    }
+                    y.row.delete();
+                    deletedRowPointer.nextDeleted = y.row;
+                    deletedRowPointer = y.row;
                     y = y.down;
                 }
         //        delete column j from matrix A.
-                if (!x.column.deleted) {
-                    x.column.delete();
-                } 
+                x.column.delete();
                 x = x.right;
             }
+            deletedRowPointer.nextDeleted = null;
             
         //    6. Repeat this algorithm recursively on the reduced matrix A.  
-            if (solveExactCover(rowRoot, columnRoot, columnSizeGroups, syvyys+1)) {
+            if (solveExactCover()) {
                 return true;
             }
             
         // Vaiheessa 5 poistetut rivit ja sarakkeet palautetaan
             r.included = false;
-            
             x = r.right;
             while (x != null) {
-                if (x.column.deleted) {
-                    x.column.undelete();
-                } 
+                x.column.undelete();
                 x = x.right;
             }
-           
-            deletedRowPointer.nextDeleted = null;
-            deletedRowPointer = deletedRowsRoot;
-            deletedRowPointer = deletedRowPointer.nextDeleted;
+            deletedRowPointer = deletedRowsRoot.nextDeleted;
             while (deletedRowPointer != null) {
                 deletedRowPointer.undelete();
                 deletedRowPointer = deletedRowPointer.nextDeleted;
             }
-            deletedRowPointer = deletedRowsRoot;
         
         // valitaan seuraava rivi
             node = node.down;
+            if (node != null) {
+                branch++;
+                if (branch % 100000 == 0) System.out.println("Haarautumia tähän mennessä "+ branch);
+            }
         }
         return false;
     }
@@ -231,7 +229,7 @@ public class AlgorithmX {
     /**
      * Metodi täyttää sudoku-ruudokun käyttäen rivisolmu -listaa. 
      */
-    private static void fillGrid(Grid grid, RowNode rowRoot) {
+    private static void fillGrid(Grid grid) {
         int gridSize = grid.getGridSize();
         RowNode row = rowRoot.down;
         while (row != null) {

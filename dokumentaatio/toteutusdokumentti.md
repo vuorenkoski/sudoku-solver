@@ -68,13 +68,19 @@ Keskeinen vaativuutta määrittelemä tekijä on tyhjien solujen määrä (n). T
 Brute-force algoritmin **aikavaativuus** riippuu tyhjien solujen lukumäärästä. Teoriassa kokeiluja joudutaan tekemään huonoimmassa tapauksessa k^n kertaa, mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti. Jokaisen luvun kokoeileminen vaatii maksimissaan 3k tarkistusta (esiintyykö luku jo samalla rivillä, sarakkeessa tai ryhmässä). Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
 
 ### Algortihm X
-**Tilavaatimus** on maltillinen. Matriisi vie tilaa k³*4. Rekursiivinen funktion kutsu enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
+**Tilavaatimus** on maltillinen. Matriisi vie tilaa luokkaa k³. Rekursiivinen funktion kutsutaan enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
 
-Algoritmin **aikavaativuus** rippuu eniten tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
+Algoritmin **aikavaativuus** rippuu teoriassa suurimmaksi osaksi tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Käytännössä useimmiten algoritmi valitsee seuraavaksi kokeiltavaksi sudokun soluksi sellaisen jossa on vain yksi vaihtoehto. Näin aikavaativuus on luokkaa n. Mutta vaikeimmissa sudokuissa osassa askeleista valitaan sudokun solu, jossa on 2 vaihtoehtoa. Tällöin hakupuu haarautuu. Kaikissa muissa testiaineiston sudokuissa haarautumia on enintään maltillisesti, mutta sudokussa 5_level372.ss näitä on valtavasti, joka tekee hakupuusta erittäin suuren.
+
+Yksi askel hakupuussa vaatii jonkin verran laskentaa. Joka kierroksella poistetaan enintään 4*4*k solua. Mikäli puussa peruutetaan niin ne myös palautetaan. 
+
+Muissa paitsi ratkeamattomassa sudokussa matriisin valmistelu on aikaavievin osa. Sen aikavaativuus on luokkaa k³. Siksi käytännössä algoritmin viemä aika ei riipukaan tyhjien solujen määrästä, vaan sudokun koosta O(n³).
+
+Vaativissa sudokuiss aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja erityisesti sudokun vaativuudesta, ja on pahimmillaan luokkaa O(2^n).
 
 ## Suorituskyky- ja O-analyysivertailu
 **Tilavaativuudeltaan** Brute-Force tilavaativuus on pienempi. Ruudukon koon mukaan tilavaativuus on sillä O(n²). AlgorithmX tilavaativuus on O(n³).
-**aikavaativuudeltaan** algoritmit ovat samaa luokkaa O(2^n), mutta Algorithm X on käytännössä huomattavasti tehokkaampi. Tehokkuutta tuo ainakin se, että algoritmi tekee valinnan seuraavaksi kokeiltavaksi ruuduksi sen johon on vähiten vaihtoehtoja, jolloin syvyyshaunon kevvyempi. Se myös tehokkaammin havaitsee mitkä ovat mahdollisia vaihtoehtoja solun arvoksi. 
+**aikavaativuudeltaan** algoritmit ovat teoriassa samaa luokkaa O(2^n), mutta Algorithm X on käytännössä huomattavasti tehokkaampi. Tehokkuutta tuo ainakin se, että algoritmi tekee valinnan seuraavaksi kokeiltavaksi ruuduksi sen, johon on vähiten vaihtoehtoja, jolloin syvyyshaku on kevvyempi. Se myös tehokkaammin havaitsee mitkä ovat mahdollisia vaihtoehtoja solun arvoksi. 
 
 ## Työn mahdolliset puutteet ja parannusehdotukset
 

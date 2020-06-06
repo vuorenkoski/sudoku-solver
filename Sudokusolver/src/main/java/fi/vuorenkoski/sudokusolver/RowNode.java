@@ -28,19 +28,10 @@ public class RowNode {
     public void delete() {
         this.deleted = true;
 
-        // poistetaan rivin solujen sarake linkitykset
+        // poistetaan rivin solut
         MatrixNode x = this.right;
         while (x != null) {
             x.delete();
-            if (x.down != null) {
-                x.down.up = x.up;
-            }
-            if (x.up != null) {
-                x.up.down = x.down;
-            } else {
-                x.column.down = x.down;
-            }
-
             x = x.right;
         }
     }
@@ -48,19 +39,10 @@ public class RowNode {
     public void undelete() {
         this.deleted = false;
 
-        // palautetaan rivin solujen sarake linkitykset
+        // palautetaan rivin solut
         MatrixNode x = this.right;
         while (x != null) {
-            x.undelete();
-            if (x.down != null) {
-                x.down.up = x;
-            }
-            if (x.up != null) {
-                x.up.down = x;
-            } else {
-                x.column.down = x;
-            }
-            
+            x.undelete();           
             x = x.right;
         }
     }

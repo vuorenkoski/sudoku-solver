@@ -26,6 +26,15 @@ public class MatrixNode {
         if (!this.deleted) {
             this.deleted = true;
             this.column.decreaseSize();
+            // poistetaan rivin solujen sarake linkitykset
+            if (this.down != null) {
+                this.down.up = this.up;
+            }
+            if (this.up != null) {
+                this.up.down = this.down;
+            } else {
+                this.column.down = this.down;
+            }
         }
     }
     
@@ -33,6 +42,15 @@ public class MatrixNode {
         if (this.deleted) {
             this.deleted = false;
             this.column.increaseSize();
+            // palautetaan rivin solujen sarake linkitykset
+            if (this.down != null) {
+                this.down.up = this;
+            }
+            if (this.up != null) {
+                this.up.down = this;
+            } else {
+                this.column.down = this;
+            }
         }
     }
 }

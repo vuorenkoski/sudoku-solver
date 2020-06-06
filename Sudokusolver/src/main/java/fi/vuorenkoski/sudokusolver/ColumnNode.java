@@ -54,8 +54,7 @@ public class ColumnNode {
         this.size++;
         insertToSizegroup();
     }
-    
-  
+      
     public void decreaseSize() {
         removeFromSizegroup();
         this.size--;
@@ -65,7 +64,9 @@ public class ColumnNode {
     private void removeFromSizegroup() {
         if (this.size < 3) {
             this.previousInSizegroup.nextInSizegroup = this.nextInSizegroup;
-            if (this.nextInSizegroup != null) this.nextInSizegroup.previousInSizegroup = this.previousInSizegroup;
+            if (this.nextInSizegroup != null) {
+                this.nextInSizegroup.previousInSizegroup = this.previousInSizegroup;
+            }
         }
     }
     
@@ -74,7 +75,9 @@ public class ColumnNode {
             this.previousInSizegroup = columnSizeGroups[this.size];
             this.nextInSizegroup = columnSizeGroups[this.size].nextInSizegroup;
             columnSizeGroups[this.size].nextInSizegroup = this;
-            if (this.nextInSizegroup != null) this.nextInSizegroup.previousInSizegroup = this;
+            if (this.nextInSizegroup != null) {
+                this.nextInSizegroup.previousInSizegroup = this;
+            }
         }
     }
 }
