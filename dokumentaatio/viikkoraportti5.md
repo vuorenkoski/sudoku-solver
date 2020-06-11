@@ -19,9 +19,10 @@ Algoritmissa pitää löytää usein sarake, jossa on vähiten soluja. Käytänn
 * onko vaativin sudoku (5_level372.ss), jossa on 372 tyhjää ruutua edes ratkaistavissa normaalilla tietokoneella. Nyt algoritmi ei ratkaise sitä järkevässä ajassa.
 
 ## Seuraavat tehtävät
-* Käyttöliittymän ja koodin stilisointi ja dokumentaation viimeistely
+* Käyttöliittymän rakentaminen, koodin stilisointi ja dokumentaation viimeistely
 
 ## Tuntikirjanpito
 * 3.6: 3 tuntia
 * 4.6: 4 tuntia
 * 6.6: 3 tuntia
+* 11.6: 2 tuntia

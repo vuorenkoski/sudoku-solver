@@ -49,7 +49,7 @@ public class Main {
                     System.out.println("SUDOKU " + count);
                     System.out.println("Tyhjat ruudut: " + grid.numberOfEmptyCells());
                     sumX += AlgorithmX.solve(grid, completedGrid);
-//                    sumBrute += BruteForce.solve(grid);
+                    sumBrute += BruteForce.solve(grid);
                     if (grid.equals(completedGrid)) {
                         System.out.println("Ratkaisut on identtiset");
                     } else {

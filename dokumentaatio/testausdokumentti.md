@@ -1,7 +1,7 @@
 # Sudokusolver - testausdokumentti
 
 ## Mitä on testattu, miten tämä tehtiin
-Ohjelmassa on kattavat yksikkötestit algoritmin oikeellisuuden testaamiseksi. Jacoco testikattavuus on 81% sisältäen Main luokan johon ei ole yksikkötestejä.
+Ohjelmassa on kattavat yksikkötestit algoritmin oikeellisuuden testaamiseksi (9x9 ja 25x25 sudokut). Jacoco testikattavuus on 81% sisältäen Main luokan johon ei ole yksikkötestejä.
 
 Lisäksi ohjelman nopeutta on testattu sudukoilla, joissa on eri määrä tyhjiä ruutuja. Samoin ohjelmaa on testattu eri kokoisilla sudokuilla (9x9, 16x16, 25x25). Testiaineistossa on kuitenkin vain viisi sudokua, jotka ovat suurempia kuin 9x9. 
 
