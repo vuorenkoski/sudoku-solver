@@ -6,7 +6,7 @@ package fi.vuorenkoski.sudokusolver;
  */
 public class Grid {
     private int[] data;
-    private int empty;
+    private int emptyCells;
     private int size;
     private int dataSize;
     private int gridSize;
@@ -16,7 +16,7 @@ public class Grid {
         this.gridSize = size * size;
         this.dataSize = this.gridSize * this.gridSize;
         this.data = new int[dataSize];
-        this.empty = dataSize;
+        this.emptyCells = dataSize;
         for (int i = 0; i < dataSize; i++) {
             this.data[i] = 0;
         }
@@ -68,9 +68,9 @@ public class Grid {
      */
     public void setCell(int x, int y, int number) {
         if (number > 0 && this.data[x - 1 + (y - 1) * this.gridSize] == 0) {
-            this.empty--;
+            this.emptyCells--;
         } else if (number == 0 && this.data[x - 1 + (y - 1) * this.gridSize] != 0) {
-            this.empty++;
+            this.emptyCells++;
         }
 
         this.data[x - 1 + (y - 1) * this.gridSize] = number;
@@ -93,7 +93,7 @@ public class Grid {
      * @return Solun arvo
      */
     public int numberOfEmptyCells() {
-        return empty;
+        return emptyCells;
     }
 
     public int getSize() {
@@ -129,6 +129,25 @@ public class Grid {
         for (int i = yy; i < yy + this.size; i++) {
             for (int j = xx; j < xx + this.size; j++) {
                 if (i != y && j != x && this.data[i * this.gridSize + j] == number) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Metodi tarkistaa että sudokun jokainen solu on täytetty, eikä
+     * rivillä, sarakkeessa tai lohkossa ole kuin yksi numero kutakin.  
+     * @return Onko sudoku ok
+     */
+    public boolean checkIntegrity() {
+        for (int i = 1; i < this.gridSize; i++) {
+            for (int j = 1; j < this.gridSize; j++) {
+                if (this.getCell(i, j) == 0) {
+                    return false;
+                }
+                if (!this.checkCell(i, j)) {
                     return false;
                 }
             }
@@ -203,4 +222,6 @@ public class Grid {
         }
         return true;
     }
+    
+    
 }

@@ -1,4 +1,4 @@
-package fi.vuorenkoski.sudokusolver;
+package fi.vuorenkoski.sudokusolver.algx;
 
 /**
  * Matriisin solmu, joka on linkitetty ylempään, alempaan ja oikeaan solmuun
@@ -22,6 +22,9 @@ public class MatrixNode {
         this.column.increaseSize();
     }
 
+    /**
+     * Poistaa solun sarakelinkitykset.
+     */
     public void delete() {
         if (!this.deleted) {
             this.deleted = true;
@@ -38,6 +41,9 @@ public class MatrixNode {
         }
     }
     
+    /**
+     * Palauttaa solun sarakelinkitykset.
+     */
     public void undelete() {
         if (this.deleted) {
             this.deleted = false;

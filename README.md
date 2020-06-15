@@ -51,7 +51,7 @@ Ohjelman argumenttina voi antaa syötteen sisältävän tiedoston nimen. Muuten 
 Solun vaihtoehdot: 3x3=1..9, 4x4=0..9 ja A..F, 5x5=A..Y
 
 ```
-java -jar target/Sudokusolver-1.0-SNAPSHOT.jar
+java -jar target/Sudokusolver-0.9.jar
 ```
 
 

@@ -1,5 +1,6 @@
-package fi.vuorenkoski.sudokusolver;
+package fi.vuorenkoski.sudokusolver.brute;
 
+import fi.vuorenkoski.sudokusolver.Grid;
 import java.text.DecimalFormat;
 
 /**
@@ -10,29 +11,32 @@ public class BruteForce {
     private static final DecimalFormat DF3 = new DecimalFormat("#.###");
     
     /**
-     * Metodi ratkaisee taulukon. Metodi täydentää parametrinaan saamansa taulukon. 
+     * Metodi ratkaisee taulukon. Metodi täydentää toisena parametrinaan saamansa taulukon. 
      * 
      * @param grid Ratkaistava ruudukko. 
-     * @return Ratkaisemiseen kulunut aika
+     * @param completedGrid Metodi täyttää tähän sudokun ratkaisun
+     * @return Ratkaisemiseen kulunut aika. Negatiivinen jos ratkaisu ei onnistunut.
      */
-    public static double solve(Grid grid) {
+    public static double solve(Grid grid, Grid completedGrid) {
         int empty = grid.numberOfEmptyCells();
-        System.out.println("Algoritmi: Brute-force");
-        double time = (double) System.nanoTime() / 1000000;
-        if (nextCell(grid, 1, 1)) {
-            System.out.println("  Vastaus löytyi");
-        } else {
-            System.out.println("  Vastausta ei löytynyt");
+        for (int i = 1; i <= grid.getGridSize(); i++) {
+            for (int j = 1; j <= grid.getGridSize(); j++) {
+                completedGrid.setCell(i, j, grid.getCell(i, j));
+            }
         }
+        double time = (double) System.nanoTime() / 1000000;
+        boolean ok = nextCell(completedGrid, 1, 1);
         time = (double) System.nanoTime() / 1000000 - time;
-        if (time < 1000) { 
-            System.out.println("  Aika (ms):" + DF3.format(time));
-        } else {
-            System.out.println("  Aika (sekuntia):" + DF3.format(time / 1000));
+        if (!ok) {
+            time = -time;
         }
         return time;
     }
     
+    /**
+     * Rekursiivisesti kutsuttava metodi, joka kokeilee vaihtoehtoja yksi kerrallaan
+     * aloittaen parametrina annetusta solusta.
+     */
     private static boolean nextCell(Grid grid, int x, int y) {
         if (grid.numberOfEmptyCells() == 0) {
             return true;

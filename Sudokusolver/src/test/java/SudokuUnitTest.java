@@ -1,5 +1,5 @@
-import fi.vuorenkoski.sudokusolver.AlgorithmX;
-import fi.vuorenkoski.sudokusolver.BruteForce;
+import fi.vuorenkoski.sudokusolver.algx.AlgorithmX;
+import fi.vuorenkoski.sudokusolver.brute.BruteForce;
 import fi.vuorenkoski.sudokusolver.Grid;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -85,7 +85,8 @@ public class SudokuUnitTest {
         }
         fileReader.close();
         grid.insertData(lines);
-        BruteForce.solve(grid);
+        Grid completedGrid = new Grid(3);
+        BruteForce.solve(grid, completedGrid);
         
         Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel22_complete.ss"));
@@ -93,7 +94,23 @@ public class SudokuUnitTest {
             lines[i]=fileReader.nextLine();
         }
         grid2.insertData(lines);      
-        assertTrue(grid.equals(grid2));
+        assertTrue(completedGrid.equals(grid2));
+    }
+
+    @Test
+    public void BruteForceOkReturnsPositive() throws FileNotFoundException {
+        Grid grid = new Grid(3);
+        Scanner fileReader = new Scanner(new File("src/test/testLevel22.ss"));
+        String[] lines = new String[11];
+        for (int i = 0; i < 11; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        fileReader.close();
+        grid.insertData(lines);
+        Grid completedGrid = new Grid(3);
+        double time = BruteForce.solve(grid, completedGrid);
+        
+        assertTrue(time>0);
     }
     
     @Test
@@ -106,7 +123,8 @@ public class SudokuUnitTest {
         }
         fileReader.close();
         grid.insertData(lines);
-        BruteForce.solve(grid);
+        Grid completedGrid = new Grid(3);
+        double time = BruteForce.solve(grid, completedGrid);
         
         Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel22_complete.ss"));
@@ -114,7 +132,7 @@ public class SudokuUnitTest {
             lines[i]=fileReader.nextLine();
         }
         grid2.insertData(lines);      
-        assertFalse(grid.equals(grid2));
+        assertTrue(time<0);
     }
     
     @Test
@@ -128,7 +146,7 @@ public class SudokuUnitTest {
         fileReader.close();
         grid.insertData(lines);
         Grid completedGrid = new Grid(3);
-        AlgorithmX.solve(grid, completedGrid);
+        AlgorithmX.solve(grid, completedGrid, false);
         
         Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel22_complete.ss"));
@@ -150,7 +168,7 @@ public class SudokuUnitTest {
         fileReader.close();
         grid.insertData(lines);
         Grid completedGrid = new Grid(3);
-        AlgorithmX.solve(grid, completedGrid);
+        AlgorithmX.solve(grid, completedGrid, false);
         
         Grid grid2 = new Grid(3);
         fileReader = new Scanner(new File("src/test/testLevel17_complete.ss"));
@@ -159,6 +177,23 @@ public class SudokuUnitTest {
         }
         grid2.insertData(lines);      
         assertTrue(completedGrid.equals(grid2));
+    }
+
+
+    @Test
+    public void AlgorithmXOk16x16() throws FileNotFoundException {
+        Grid grid = new Grid(4);
+        Scanner fileReader = new Scanner(new File("src/test/4_level148.ss"));
+        String[] lines = new String[19];
+        for (int i = 0; i < 19; i++) {
+            lines[i]=fileReader.nextLine();
+        }
+        fileReader.close();
+        grid.insertData(lines);
+        Grid completedGrid = new Grid(4);
+        AlgorithmX.solve(grid, completedGrid, false);
+        
+        assertTrue(completedGrid.checkIntegrity());
     }
     
     @Test
@@ -172,7 +207,7 @@ public class SudokuUnitTest {
         fileReader.close();
         grid.insertData(lines);
         Grid completedGrid = new Grid(5);
-        AlgorithmX.solve(grid, completedGrid);
+        AlgorithmX.solve(grid, completedGrid, false);
         
         Grid grid2 = new Grid(5);
         fileReader = new Scanner(new File("src/test/5_sudoku2_complete.ss"));
@@ -208,7 +243,8 @@ public class SudokuUnitTest {
         }
         fileReader.close();
         grid.insertData(lines);
-        BruteForce.solve(grid);
+        Grid completedGrid = new Grid(5);
+        BruteForce.solve(grid, completedGrid);
         
         Grid grid2 = new Grid(5);
         fileReader = new Scanner(new File("src/test/5_sudoku2_complete.ss"));
@@ -216,6 +252,6 @@ public class SudokuUnitTest {
             lines[i]=fileReader.nextLine();
         }
         grid2.insertData(lines);      
-        assertTrue(grid.equals(grid2));
+        assertTrue(completedGrid.equals(grid2));
     }
 }

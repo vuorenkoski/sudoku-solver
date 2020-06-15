@@ -1,7 +1,7 @@
 # Sudokusolver - toteutusdokumentti
 
 ## Ohjelman yleisrakenne
-Ohjelman Main-luokka toteuttaa tiedoston lukemisen ja kahden algoritmin (Algorithm X ja Brute-Forece) suorittamisen yksi kerrallaan jokaiselle tiedostossa olevalle sudokulle. 
+Ohjelman Main-luokka toteuttaa tiedoston lukemisen ja kahden algoritmin (Algorithm X ja Brute-Forece) suorittamisen yksi kerrallaan jokaiselle tiedostossa olevalle sudokulle riippuen asetuksista. 
 
 Grid -luokan olio kuvaa sudoku-ruudukkoa.
 
@@ -29,9 +29,9 @@ Rajoitteet:
 
 Näin muodostuu 4x81 = 324 rajoitetta. Vastauksessa jokainen näistä rajoitteista pitää esiintyä täsmälleen kerran.
 
-Jokainen osajoukko kuvaa siis yhtä vaihtoehtoa (esimerkiksi rivin 2 sarakkeessa 7 on luku 9). Osajoukko muodostuu neljästä rajoitteesta (rivin 2 sarakkeessa on luku, rivillä 2 on luku 9, sarakkeessa 7 on luku 9, ryhmässä 3 on luku 9).
+Jokainen osajoukko kuvaa siis yhtä vaihtoehtoa (esimerkiksi rivin 2 sarakkeessa 7 on luku 9). Osajoukko muodostuu neljästä rajoitteesta (rivin 2 sarakkeessa 7 on luku, rivillä 2 on luku 9, sarakkeessa 7 on luku 9, ryhmässä 3 on luku 9).
 
-Tämän avulla luodaan binääritaulukko jossa on 729 riviä ja 324 saraketta. Rivit on vaihtoehtoja ja sarakkeet rajoitteita. Täydellinen peite on siis sellainen joukko rivejä, joissa yhteensä esiintyy jokainen sarake täsmälleen kerran.
+Tämän avulla luodaan binääritaulukko, jossa on 729 riviä ja 324 saraketta. Rivit on vaihtoehtoja ja sarakkeet rajoitteita. Täydellinen peite on siis sellainen joukko rivejä, joissa yhteensä esiintyy jokainen sarake täsmälleen kerran.
 
 Tässä ohjelmassa taulukko on toteutettu linkitettyinä listoina. Jokainen täysi solu on linkitetty oikeaan, alempaan ja ylempään täyteen soluun. Tyhjät solmut on jätetty taulukosta kokonaan pois.
 
@@ -43,7 +43,9 @@ Tämä ratkaisu antaa kaksi etua: taulukon koko on pienempi, koska tyhjät solut
 
 Muuten valitaan sarake, jossa on vähiten soluja. Jos sarake on tyhjä, täydellistä peitettä ei voida tällä osaratkaisulla saavuttaa. Kaydään läpi kaikki rivit joissa esiintyy tämän sarakkeen solu.
 
-Jokaisen tällaisen rivin osalta tehdään seuraava: Otetaan rivi osaksi ratkaisua. Poistetaan taulukosta kaikki sarakkeet joissa esiintyy rivin solu. Poistetaan myös kaikki rivit joissa esiintyy jokin näistä sarakkeista. Lopuksi annetaan tämä karsittu taulukko rekursiivisesti algoritmin syötteeksi. 
+Jokaisen tällaisen rivin osalta tehdään seuraava: Otetaan rivi osaksi ratkaisua. Poistetaan taulukosta kaikki sarakkeet joissa esiintyy rivin solu. Poistetaan myös kaikki rivit (rivin solut), joissa esiintyy jokin näistä sarakkeista. Poistetut rivit lisätään erillisiin deletedRows linkitettyyn listaan palautusta varten. Lopuksi annetaan tämä karsittu taulukko rekursiivisesti algoritmin syötteeksi. 
+
+Jos rekursiivinen kutsu ei tuottanut tulosta, palautetaan poistetut sarakkeet ja solut. Valitaan sarakkeen seuraava rivi.
 
 Algoritmin kuvaus Wikipipediasta (https://en.wikipedia.org/wiki/Knuth%27s_Algorithm_X): 
 
@@ -59,31 +61,35 @@ Algoritmin kuvaus Wikipipediasta (https://en.wikipedia.org/wiki/Knuth%27s_Algori
 6. Repeat this algorithm recursively on the reduced matrix A.
 ```
 
+Metodi vähiten soluja sisältävän sarakkeen löytämiseksi: Jokainen sarakeolio sisältää tiedon sarakkeesa olevien solujen määrästä. Algoritmi pitää kokoajan lisäksi kirjaa sarakkeista, joissa on 0, 1 tai 2 solua. Nämä ovat sarakkeiden linkitettyjä listoja, joten sarakkeiden lisääminen ja poistaminen niistä on mahdollista. Ainakaan testiaineistossa ei ole sudokua, jonka ratkaisemisessa törmättäisiin tilanteeseen, jossa vähiten soluja sisältävän sarakkeen koko olisi yli 2.
+
 ## Saavutetut aika- ja tilavaativuudet
 Keskeinen vaativuutta määrittelemä tekijä on tyhjien solujen määrä (n). Toinen tärkeä tekijä on ruudukon koko (k).
 
 ### Brute-force
-**Tilavaatimus** on varsin pieni. Algoritmi vaatii yhden Grid tyyppisen olion. Funktio kutsutaan rekursiivisesti enintään n kertaa yhtä aikaa. Tilavaativuus siis riippuu tyhjien solujen määrästä ja on luokkaa O(n)?
+**Tilavaatimus** on varsin pieni. Algoritmi vaatii yhden Grid tyyppisen olion. Funktio kutsutaan rekursiivisesti enintään n kertaa yhtä aikaa. Tilavaativuus siis riippuu tyhjien solujen määrästä ja on luokkaa O(n).
 
 Brute-force algoritmin **aikavaativuus** riippuu tyhjien solujen lukumäärästä. Teoriassa kokeiluja joudutaan tekemään huonoimmassa tapauksessa k^n kertaa, mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti. Jokaisen luvun kokoeileminen vaatii maksimissaan 3k tarkistusta (esiintyykö luku jo samalla rivillä, sarakkeessa tai ryhmässä). Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
 
 ### Algortihm X
-**Tilavaatimus** on maltillinen. Matriisi vie tilaa luokkaa k³. Rekursiivinen funktion kutsutaan enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
+**Tilavaatimus** on kohtuullisen nopeasti kasvava. Matriisi vie tilaa luokkaa k³. Rekursiivinen funktion kutsutaan enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
 
-Algoritmin **aikavaativuus** rippuu teoriassa suurimmaksi osaksi tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Käytännössä useimmiten algoritmi valitsee seuraavaksi kokeiltavaksi sudokun soluksi sellaisen jossa on vain yksi vaihtoehto. Näin aikavaativuus on luokkaa n. Mutta vaikeimmissa sudokuissa osassa askeleista valitaan sudokun solu, jossa on 2 vaihtoehtoa. Tällöin hakupuu haarautuu. Kaikissa muissa testiaineiston sudokuissa haarautumia on enintään maltillisesti, mutta sudokussa 5_level372.ss näitä on valtavasti, joka tekee hakupuusta erittäin suuren.
+Algoritmin **aikavaativuus** rippuu teoriassa suurimmaksi osaksi tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Käytännössä useimmiten algoritmi valitsee seuraavaksi kokeiltavaksi sudokun soluksi sellaisen, jossa on vain yksi vaihtoehto. Näin aikavaativuus on luokkaa n. Mutta vaikeimmissa sudokuissa osassa askeleista valitaan sudokun solu, jossa on kaksi vaihtoehtoa. Tällöin hakupuu haarautuu. Kaikissa muissa testiaineiston sudokuissa haarautumia on enintään maltillisesti, mutta sudokussa 5_level372.ss näitä on valtavasti, joka tekee hakupuusta erittäin suuren.
 
-Yksi askel hakupuussa vaatii jonkin verran laskentaa. Joka kierroksella poistetaan enintään 4*4*k solua. Mikäli puussa peruutetaan niin ne myös palautetaan. 
+Yksi askel hakupuussa vaatii jonkin verran laskentaa. Jokaisella kierroksella poistetaan enintään 4*4*k solua. Mikäli puussa peruutetaan niin ne myös palautetaan. 
 
 Muissa paitsi ratkeamattomassa sudokussa matriisin valmistelu on aikaavievin osa. Sen aikavaativuus on luokkaa k³. Siksi käytännössä algoritmin viemä aika ei riipukaan tyhjien solujen määrästä, vaan sudokun koosta O(n³).
 
-Vaativissa sudokuiss aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja erityisesti sudokun vaativuudesta, ja on pahimmillaan luokkaa O(2^n).
+Vaativissa sudokuissa aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja erityisesti sudokun vaativuudesta, ja on pahimmillaan luokkaa O(2^n).
 
 ## Suorituskyky- ja O-analyysivertailu
 **Tilavaativuudeltaan** Brute-Force tilavaativuus on pienempi. Ruudukon koon mukaan tilavaativuus on sillä O(n²). AlgorithmX tilavaativuus on O(n³).
-**aikavaativuudeltaan** algoritmit ovat teoriassa samaa luokkaa O(2^n), mutta Algorithm X on käytännössä huomattavasti tehokkaampi. Tehokkuutta tuo ainakin se, että algoritmi tekee valinnan seuraavaksi kokeiltavaksi ruuduksi sen, johon on vähiten vaihtoehtoja, jolloin syvyyshaku on kevvyempi. Se myös tehokkaammin havaitsee mitkä ovat mahdollisia vaihtoehtoja solun arvoksi. 
+**aikavaativuudeltaan** algoritmit ovat teoriassa samaa luokkaa O(2^n), mutta Algorithm X on käytännössä huomattavasti tehokkaampi. Tehokkuutta tuo ainakin se, että algoritmi tekee valinnan seuraavaksi kokeiltavaksi ruuduksi sen, johon on vähiten vaihtoehtoja, jolloin syvyyshaku on kevyempi. Se myös tehokkaammin havaitsee mitkä ovat mahdollisia vaihtoehtoja solun arvoksi.
 
 ## Työn mahdolliset puutteet ja parannusehdotukset
-
+* Graafinen käyttöliittymä
+* Koodin optimointi jotta haastavinkin sudoku ratkeaa järjellisessä ajassa
+* Tiedostovirheiden tunnistaminen
 
 ## Lähteet
 * [Wikipedia: Sudoku solving algorithms](https://en.wikipedia.org/wiki/Sudoku_solving_algorithms)

@@ -1,14 +1,16 @@
-package fi.vuorenkoski.sudokusolver;
+package fi.vuorenkoski.sudokusolver.algx;
 
+import fi.vuorenkoski.sudokusolver.Grid;
 import java.text.DecimalFormat;
 
 /**
- * Luokan metodit toteuttavat Algotirithm X haun.
+ * Luokan metodit toteuttavat Algorithm X haun.
  * @author Lauri Vuorenkoski
  */
 public class AlgorithmX {
     private static final DecimalFormat DF3 = new DecimalFormat("#.###");
-    private static int branch;
+    private static int twoBranches, falseBranches;
+    private static int[] branchLevels;
     private static RowNode rowRoot;
     private static ColumnNode columnRoot;
     private static ColumnNode columnSizeGroups[];
@@ -18,10 +20,9 @@ public class AlgorithmX {
      * 
      * @param grid Ratkaistava sudoku 
      * @param completedGrid Metodi täyttää tähän sudokun ratkaisun
-     * @return Ratkaisemiseen kulunut aika
+     * @return Ratkaisemiseen kulunut aika. Negatiivinen jos ratkaisu ei onnistunut.
      */
-    public static double solve(Grid grid, Grid completedGrid) {
-        System.out.println("Algoritmi: Algorithm X");
+    public static double solve(Grid grid, Grid completedGrid, boolean showBranching) {
         double time = (double) System.nanoTime() / 1000000;
 
         // Valmistellaan matriisi
@@ -32,24 +33,21 @@ public class AlgorithmX {
         rowRoot = new RowNode(0);
         columnRoot = new ColumnNode(0, null);
         createMatrix(grid);
-        System.out.println("  Valmistelu (ms):" + DF3.format((double) System.nanoTime() / 1000000 - time));
         
         // Matriisin avulla käydään läpi Algorithmx
-        branch = 0;
-        if (solveExactCover()) {
-            System.out.println("  Vastaus löytyi");
-        } else {
-            System.out.println("  Vastausta ei löytynyt");
+        twoBranches = 0;
+        falseBranches = 0;
+        branchLevels = new int[400];
+        boolean ok = solveExactCover(1, showBranching);
+        if (showBranching) {
+            System.out.println("  Haarautumiskohtia: " + twoBranches);
+            System.out.println("  Läpikäytyjä haaroja joista ei löytynyt ratkaisua: " + falseBranches);
         }
-        System.out.println("  Haarautumia: " + branch);
         // Luodaan vastaus
         fillGrid(completedGrid);
-
         time = (double) System.nanoTime() / 1000000 - time;
-        if (time < 1000) { 
-            System.out.println("  Aika (ms):" + DF3.format(time));
-        } else {
-            System.out.println("  Aika (sekuntia):" + DF3.format(time / 1000));
+        if (!ok) {
+            time = -time;
         }
         return time;
     }
@@ -132,6 +130,10 @@ public class AlgorithmX {
         }
     }
     
+    /**
+     * Metodi lisää soluun linkitykset pystysyynnassa.
+     * 
+     */
     private static void insertColumnLinks(MatrixNode node, MatrixNode[] columnBottomArray) {
         int column = node.column.number;
         if (columnBottomArray[column] == null) {
@@ -149,10 +151,10 @@ public class AlgorithmX {
      * Täydellisen peitteen muodostaa ne rivisolmut, joiden status on  "included"
      * @return Metodi palauttaa true jos ratkaisu löytyi, muuten false
      */
-    private static boolean solveExactCover() {      
+    private static boolean solveExactCover(int level, boolean showBranching) {      
         RowNode deletedRowsRoot = new RowNode(0);
         RowNode deletedRowPointer;
-
+        
         //    1. If the matrix A has no columns, the current partial solution is a valid solution; terminate successfully.
         if (columnRoot.right == null) {
             return true;
@@ -165,7 +167,13 @@ public class AlgorithmX {
         }
         if (columnSizeGroups[1].nextInSizegroup != null) {
             c = columnSizeGroups[1].nextInSizegroup;
-        } else {
+        } else { // Tarjolla ei ole muita sarakkeita kuin sellaisia joissa on kaksi rivivaihtoehtoa
+            twoBranches++;
+            branchLevels[level] = 1;
+//            displayBranchLevels();
+            if (showBranching && twoBranches % 10000 == 0) {
+                displayBranchLevelsAll();
+            }
             c = columnSizeGroups[2].nextInSizegroup;
             if (c == null) { // ei pitäisi sattua, mutta jos ei ole 0-2 solun sarakkeita, otetaan ensimmäinen sarake
                 c = columnRoot.right;
@@ -199,7 +207,7 @@ public class AlgorithmX {
             deletedRowPointer.nextDeleted = null;
             
         //    6. Repeat this algorithm recursively on the reduced matrix A.  
-            if (solveExactCover()) {
+            if (solveExactCover(level + 1, showBranching)) {
                 return true;
             }
             
@@ -219,8 +227,9 @@ public class AlgorithmX {
         // valitaan seuraava rivi
             node = node.down;
             if (node != null) {
-                branch++;
-                if (branch % 100000 == 0) System.out.println("Haarautumia tähän mennessä "+ branch);
+                branchLevels[level] = 0;
+//                displayBranchLevels();
+                falseBranches++;
             }
         }
         return false;
@@ -240,5 +249,23 @@ public class AlgorithmX {
             }
             row = row.down;
         }
+    }
+    
+    private static void displayBranchLevelsAll() {
+        for (int i = 0; i < 170; i++) {
+            if (branchLevels[i] == 1) {
+                System.out.print(".");
+            } else {
+                System.out.print(" ");
+            }
+        }
+        System.out.println("");
+    }
+
+    private static void displayBranchLevels() {
+        for (int i = 0; i < twoBranches - falseBranches; i++) {
+            System.out.print(".");
+        }
+        System.out.println("");
     }
 }

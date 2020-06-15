@@ -1,4 +1,4 @@
-package fi.vuorenkoski.sudokusolver;
+package fi.vuorenkoski.sudokusolver.algx;
 
 /**
  * Matriisin sarake, joka on linkitetty vasempaan ja oikeaan sarakkeeseen sekä sarakkeen ensimmäiseen soluun
@@ -31,6 +31,9 @@ public class ColumnNode {
         }
     }
 
+    /**
+     * Poistaa sarakkeen sarakkeiden linkitetystä listasta.
+     */
     public void delete() {
         removeFromSizegroup();
         this.deleted = true;
@@ -40,6 +43,9 @@ public class ColumnNode {
         this.left.right = this.right;
     }
 
+    /**
+     * Palauttaa sarakkeen sarakkeiden linkitettyn listaan.
+     */
     public void undelete() {
         this.deleted = false;
         if (this.right != null) {
@@ -61,6 +67,10 @@ public class ColumnNode {
         insertToSizegroup();
     }
     
+    /**
+     * Poistaa sarakkeen koon mukaisesta linkitetystä listasta.
+     * Listoja on kolmelle koolle: 0, 1 ja 2.
+     */
     private void removeFromSizegroup() {
         if (this.size < 3) {
             this.previousInSizegroup.nextInSizegroup = this.nextInSizegroup;
@@ -70,6 +80,10 @@ public class ColumnNode {
         }
     }
     
+    /**
+     * Lisää sarakkeen koon mukaiseen linkitettyyn listaan.
+     * Listoja on kolmelle koolle: 0, 1 ja 2.
+     */
     private void insertToSizegroup() {
         if (this.size < 3) {
             this.previousInSizegroup = columnSizeGroups[this.size];

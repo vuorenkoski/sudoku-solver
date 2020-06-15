@@ -1,4 +1,4 @@
-package fi.vuorenkoski.sudokusolver;
+package fi.vuorenkoski.sudokusolver.algx;
 
 /**
  * Matriisin rivi, joka on linkitetty alempaan riviin ja rivin ensimmäiseen solmuun
