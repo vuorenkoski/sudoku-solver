@@ -40,7 +40,7 @@
                 <version>0.8.3</version>
                 <configuration>
                     <excludes>
-                        <exclude>fi.vuorenkoski.sudokusolver.Main</exclude>
+                        <exclude>fi.vuorenkoski.sudokusolver/Main</exclude>
                     </excludes>
                 </configuration>
                 <executions>

@@ -44,6 +44,8 @@ Suoritusajat (yksi sudoku keskimäärin). Testikone: AMD Ryzen 5 2600X, Kubuntu 
 |25x25|271|1|1,19s|11,8ms|
 |25x25|372|1|ei ratkea|ei ratkea|
 
+<img src="nopeudet.png">
+
 9x9 sudokuissa huomaa miten linkitetyn matriisin valmistelu vie leijonanosan ajasta. Valmistelun aikavaativuus riippuu näissä tilanteissa käytännössä sudokun koosta, ei tyhjien solujen määrästä.
 
 16x16 sudokujen ero on myös mielenkiintoinen. Vaikka toisessa kolmen sudokun aineistossa on tyhjiä soluja enemmän, aikavaatimus on huomattavasti pienempi. Tämä johtuu siitä, että niiden ratkaisemissa ei tule haarautumia. Sen sijaa sudokussa 4_level148.ss tulee paljon haarautumia (266). 
