@@ -18,7 +18,6 @@ Algoritmiin X luotiin optio, jolla voi tulostaa dataa haarautumisesta.
 * np-täydellisten ongelmien aikavaativuus kasvaa nopeasti!
 
 ## Epäselvää
-* onko vaativin sudoku (5_level372.ss), jossa on 372 tyhjää ruutua edes ratkaistavissa normaalilla tietokoneella. Nyt algoritmi ei ratkaise sitä järkevässä ajassa.
 
 ## Seuraavat tehtävät
 * Viimeistely
@@ -26,3 +25,4 @@ Algoritmiin X luotiin optio, jolla voi tulostaa dataa haarautumisesta.
 ## Tuntikirjanpito
 * 13.6: 8 tuntia
 * 15.6: 2 tuntia
+* 18.6: 1 tunti

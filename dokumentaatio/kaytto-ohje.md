@@ -8,13 +8,13 @@ Sudokuja ratkaistaan kahdella eri algoritmilla, raakaan laskentavoimaan perustuv
 Ohjelma ottaa syötteenä tiedoston, joka sisältää yhden tai useamman sudokun. Tiedoston nimi annetaan ohjelman parametrina. Mikäli ohjelmalle ei anneta parametria, käytetään käynnistyshakemistossa oleva sudoku.ss -tiedostoa.
 
 Myös ohjelman asetukset voidaan antaa parametreina. Valitsimet:
-x - Käytä algorithm X
-b - Käytä Brute-Force
-s - Tulosta alkuperäinen sudoku
-r - Tulosta ratkaisu
-t - Tarkista kaikki valmiit sudokut
-d - Tulostaa dataa haarautumisesta (haarautumisen analyysiä varten)
-h - Ohje
+> x - Käytä algorithm X
+> b - Käytä Brute-Force
+> s - Tulosta alkuperäinen sudoku
+> r - Tulosta ratkaisu
+> t - Tarkista kaikki valmiit sudokut
+> d - Tulostaa dataa haarautumisesta (haarautumisen analyysiä varten)
+> h - Ohje
 
 Ennen sudokujen ratkaisemista ohjelmassa voi muuttaa asetuksia ellei niitä ole annettu parametreina. Oletusasetuksena on, että kummatkin algoritmit suoritetaan, eikä sudokuja tulosteta ennen tai jälkeen ratkaisun. 
 

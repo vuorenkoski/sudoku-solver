@@ -39,7 +39,7 @@ public class AlgorithmX {
         falseBranches = 0;
         branchLevels = new int[400];
         boolean ok = solveExactCover(1, showBranching);
-        if (showBranching) {
+        if (showBranching && twoBranches > 0) {
             System.out.println("  Haarautumiskohtia: " + twoBranches);
             System.out.println("  Läpikäytyjä haaroja joista ei löytynyt ratkaisua: " + falseBranches);
         }
@@ -172,7 +172,7 @@ public class AlgorithmX {
             branchLevels[level] = 1;
 //            displayBranchLevels();
             if (showBranching && twoBranches % 10000 == 0) {
-                displayBranchLevelsAll();
+                displayBranchLevelsAll();  // jos haarautumia tulee todella paljon, tulostetaan haarautumagraafia
             }
             c = columnSizeGroups[2].nextInSizegroup;
             if (c == null) { // ei pitäisi sattua, mutta jos ei ole 0-2 solun sarakkeita, otetaan ensimmäinen sarake
