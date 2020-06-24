@@ -7,7 +7,7 @@ Sudokuja ratkaistaan kahdella eri algoritmilla, raakaan laskentavoimaan perustuv
 
 Ohjelma ottaa syötteenä tiedoston, joka sisältää yhden tai useamman sudokun. Tiedoston nimi annetaan ohjelman parametrina. Mikäli ohjelmalle ei anneta parametria, käytetään käynnistyshakemistossa oleva sudoku.ss -tiedostoa.
 
-Ohjelman asetukset voidaan myös antaa parametreina (esim "java -jar target/Sudokusolver-0.9.jar -xdt testidata/3_100sudokua64.ss". Valitsimet:
+Ohjelman asetukset voidaan myös antaa parametreina (esim "java -jar target/Sudokusolver-1.0.jar -xdt testidata/3_100sudokua64.ss". Valitsimet:
 
 * x - Käytä algorithm X
 * b - Käytä Brute-Force

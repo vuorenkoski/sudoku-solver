@@ -5,7 +5,7 @@ Ohjelman Main-luokka toteuttaa tiedoston lukemisen ja kahden algoritmin (Algorit
 
 Grid -luokan olio kuvaa sudoku-ruudukkoa.
 
-BruteFore -luokan metodit toteuttaa BruteForce haun, joska myös hyödyntää Grid-luokan metodia checkCell. AlgorithmX -luokan metodit toteuttavat Algorithm X haun.
+BruteFore -luokan metodit toteuttaa BruteForce haun, joka myös hyödyntää Grid-luokan metodia checkCell. AlgorithmX -luokan metodit toteuttavat Algorithm X haun.
 
 ### Brute-Force
 Tämä algoritmi käy läpi rekursiivisesti syvyyshaulla kaikki sudokun tyhjät ruudut. Syvyyshaussa sudokun tyhjiä soluja lähdetään täyttämään vasemmasta yläkulmasta riveittäin. Pienimmästä numerosta suurimpaan. Yhden haaran haku pysähtyy, mikäli seuraavaan soluun ruutuun ei voi lisätä mitään numeroa (jokaisen numeron osalta tarkistetaan ettei samaa numeroa ole ryhmässä, rivillä tai sarakkeessa). Haku päättyy kun kaikkiin soluihin on saatu numero.
@@ -17,19 +17,17 @@ Tässä algoritmissa sudoku ratkaistaan siten, että se kuvataan [täydellinen p
 
 **Täydellinen peite -ongelmassa** pyritään löytämään sellainen joukon osajoukkojen kombinaatio, jossa jokainen joukon alkio on edustettu yhden ja vain yhden kerran.
 
-Kun sudoku kuvataan täydellinen peite -ongelmana, on osajoukkoina jokaisen solun jokainen mahdollinen numero. Tyhjässä sudokussa osajoukkoja on siten 9x9x9 = 729. 
-
-Joukon alkiot ovat puolestaan rajoitteita. Esimerkiksi rivillä 3 pitää olla alkio 2. Tai rivin 4 sarakkeessa 5 voi olla vain yksi numero. 
+Kun sudoku kuvataan täydellinen peite -ongelmana, joukon alkiot ovat rajoitteita. Esimerkiksi rivillä 3 pitää olla alkio 2. Tai rivin 4 sarakkeessa 5 voi olla vain yksi numero. 
 
 Rajoitteet:
-1) Yhdessä solussa voi olla vain yksi numero
-2) Yhdellä rivillä pitää esiintyä jokainen numero vain kerran
-3) Yhdellä sarakkeella pitää esiintyä jokainen numero vain kerran
-4) Yhdessä ryhmässä pitää esiintyä jokainen numero vain kerran
+1) jokaisessa solussa voi olla vain yksi numero
+2) Jokaisella rivillä pitää esiintyä jokainen numero
+3) Jokaisella sarakkeella pitää esiintyä jokainen numero
+4) Jokaisessa ryhmässä pitää esiintyä jokainen numero
 
 Näin muodostuu 4x81 = 324 rajoitetta. Vastauksessa jokainen näistä rajoitteista pitää esiintyä täsmälleen kerran.
 
-Jokainen osajoukko kuvaa siis yhtä vaihtoehtoa (esimerkiksi rivin 2 sarakkeessa 7 on luku 9). Osajoukko muodostuu neljästä rajoitteesta (rivin 2 sarakkeessa 7 on luku, rivillä 2 on luku 9, sarakkeessa 7 on luku 9, ryhmässä 3 on luku 9).
+Joukon osajoukkoja on puolestaan jokaisen solun jokainen mahdollinen numero. Tyhjässä sudokussa osajoukkoja on siten 9x9x9 = 729. Jokainen osajoukko kuvaa siis yhtä vaihtoehtoa (esimerkiksi rivin 2 sarakkeessa 7 on luku 9). Osajoukko muodostuu neljästä rajoitteesta/alkiosta (rivin 2 sarakkeessa 7 on luku, rivillä 2 on luku 9, sarakkeessa 7 on luku 9, ryhmässä 3 on luku 9).
 
 Tämän avulla luodaan binääritaulukko, jossa on 729 riviä ja 324 saraketta. Rivit on vaihtoehtoja ja sarakkeet rajoitteita. Täydellinen peite on siis sellainen joukko rivejä, joissa yhteensä esiintyy jokainen sarake täsmälleen kerran.
 
@@ -41,7 +39,7 @@ Tämä ratkaisu antaa kaksi etua: taulukon koko on pienempi, koska tyhjät solut
 
 **Algorithm X** toimii rekursiivisesti. Sille annetaan taulukko. Jos taulukossa ei ole ollenkaan sarakkeita (eli kaikki sarakkeet on jo ratkaisussa), täydellinen peite on löydetty.
 
-Muuten valitaan sarake, jossa on vähiten soluja. Jos sarake on tyhjä, täydellistä peitettä ei voida tällä osaratkaisulla saavuttaa. Kaydään läpi kaikki rivit joissa esiintyy tämän sarakkeen solu.
+Muuten valitaan sarake, jossa on vähiten soluja. Jos sarake on tyhjä, täydellistä peitettä ei voida tällä osaratkaisulla saavuttaa. Kaydään läpi kaikki rivit, joissa esiintyy tämän sarakkeen solu.
 
 Jokaisen tällaisen rivin osalta tehdään seuraava: Otetaan rivi osaksi ratkaisua. Poistetaan taulukosta kaikki sarakkeet joissa esiintyy rivin solu. Poistetaan myös kaikki rivit (rivin solut), joissa esiintyy jokin näistä sarakkeista. Poistetut rivit lisätään erillisiin deletedRows linkitettyyn listaan palautusta varten. Lopuksi annetaan tämä karsittu taulukko rekursiivisesti algoritmin syötteeksi. 
 
@@ -61,7 +59,7 @@ Algoritmin kuvaus Wikipipediasta (https://en.wikipedia.org/wiki/Knuth%27s_Algori
 6. Repeat this algorithm recursively on the reduced matrix A.
 ```
 
-Metodi vähiten soluja sisältävän sarakkeen löytämiseksi: Jokainen sarakeolio sisältää tiedon sarakkeesa olevien solujen määrästä. Algoritmi pitää kokoajan lisäksi kirjaa sarakkeista, joissa on 0, 1 tai 2 solua. Nämä ovat sarakkeiden linkitettyjä listoja, joten sarakkeiden lisääminen ja poistaminen niistä on mahdollista. Ainakaan testiaineistossa ei ole sudokua, jonka ratkaisemisessa törmättäisiin tilanteeseen, jossa vähiten soluja sisältävän sarakkeen koko olisi yli 2.
+Metodi vähiten soluja sisältävän sarakkeen löytämiseksi: Jokainen sarakeolio sisältää tiedon sarakkeessa olevien solujen määrästä. Algoritmi pitää kokoajan lisäksi kirjaa sarakkeista, joissa on 0, 1 tai 2 solua. Nämä ovat sarakkeiden linkitettyjä listoja, joten sarakkeiden lisääminen ja poistaminen niistä on mahdollista. Ainakaan testiaineistossa ei ole sudokua, jonka ratkaisemisessa törmättäisiin tilanteeseen, jossa vähiten soluja sisältävän sarakkeen koko olisi yli 2.
 
 ## Saavutetut aika- ja tilavaativuudet
 Keskeinen vaativuutta määrittelemä tekijä on tyhjien solujen määrä (n). Toinen tärkeä tekijä on ruudukon koko (k).
@@ -69,12 +67,12 @@ Keskeinen vaativuutta määrittelemä tekijä on tyhjien solujen määrä (n). T
 ### Brute-force
 **Tilavaatimus** on varsin pieni. Algoritmi vaatii yhden Grid tyyppisen olion. Funktio kutsutaan rekursiivisesti enintään n kertaa yhtä aikaa. Tilavaativuus siis riippuu tyhjien solujen määrästä ja on luokkaa O(n).
 
-Brute-force algoritmin **aikavaativuus** riippuu tyhjien solujen lukumäärästä. Teoriassa kokeiluja joudutaan tekemään huonoimmassa tapauksessa k^n kertaa, mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti. Jokaisen luvun kokoeileminen vaatii maksimissaan 3k tarkistusta (esiintyykö luku jo samalla rivillä, sarakkeessa tai ryhmässä). Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
+Brute-force algoritmin **aikavaativuus** riippuu tyhjien solujen lukumäärästä. Teoriassa kokeiluja joudutaan tekemään huonoimmassa tapauksessa k^n kertaa, mutta käytännössä yhden haaran läpikäynti pysähtyy huomattavasti ennen kuin päästään haaran loppuun asti. Jokaisen luvun kokeileminen vaatii maksimissaan 3k tarkistusta (esiintyykö luku jo samalla rivillä, sarakkeessa tai ryhmässä). Aikavaativuus riippuu tyhjien ruutujuen lukumäärästä ja on luokkaa O(2^n).
 
 ### Algortihm X
 **Tilavaatimus** on kohtuullisen nopeasti kasvava. Matriisi vie tilaa luokkaa k³. Rekursiivinen funktion kutsutaan enintään n kertaa kerrallaan. Eli tilavaativuus riippuu ruudukon koosta ja on luokkaa O(n³) 
 
-Algoritmin **aikavaativuus** rippuu teoriassa suurimmaksi osaksi tyhjien ruutujen lukumäärästä. Algoritmi käy läpi Brute-Force algoritmin tavoin maksimissaan jokaisen mahdollisuuden tyhjiin ruutuihin. Käytännössä useimmiten algoritmi valitsee seuraavaksi kokeiltavaksi sudokun soluksi sellaisen, jossa on vain yksi vaihtoehto. Näin aikavaativuus on luokkaa n. Mutta vaikeimmissa sudokuissa osassa askeleista valitaan sudokun solu, jossa on kaksi vaihtoehtoa. Tällöin hakupuu haarautuu. Kaikissa muissa testiaineiston sudokuissa haarautumia on enintään maltillisesti, mutta sudokussa 5_level372.ss näitä on valtavasti, joka tekee hakupuusta erittäin suuren.
+Algoritmin **aikavaativuus** rippuu teoriassa suurimmaksi osaksi tyhjien ruutujen lukumäärästä. Algoritmi käy läpi maksimissaan jokaisen mahdollisuuden jokaiseen rajoitteeseen. Käytännössä useimmiten algoritmi valitsee seuraavaksi kokeiltavaksi rajoitteeki sellaisen, jossa on vain yksi vaihtoehto. Näin aikavaativuus on luokkaa n. Mutta vaikeimmissa sudokuissa osassa askeleista valitaan rajoite, jossa on kaksi vaihtoehtoa. Tällöin hakupuu haarautuu. Kaikissa muissa testiaineiston sudokuissa haarautumia on enintään maltillisesti, mutta sudokussa 5_level372.ss näitä on valtavasti, joka tekee hakupuusta erittäin suuren.
 
 Yksi askel hakupuussa vaatii jonkin verran laskentaa. Jokaisella kierroksella poistetaan enintään 4*4*k solua. Mikäli puussa peruutetaan niin ne myös palautetaan. 
 

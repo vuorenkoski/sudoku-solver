@@ -1,9 +1,11 @@
 # Sudokusolver - testausdokumentti
 
 ## Mitä on testattu, miten tämä tehtiin
-Ohjelmassa on kattavat yksikkötestit algoritmin oikeellisuuden testaamiseksi (9x9 ja 25x25 sudokut). Jacoco testikattavuus on 72% sisältäen Main luokan, johon ei ole yksikkötestejä.
+Ohjelmassa on kattavat yksikkötestit algoritmin oikeellisuuden testaamiseksi (9x9 ja 25x25 sudokut). Jacoco testikattavuus on 72% sisältäen Main luokan, johon ei ole yksikkötestejä. Algoritmien toiminta testataan 9x9, 16x16 ja 25x25 sudokuilla, joiden oikeat ratkaisut on tallennettu testikansioon. Testikansiossa on myös yksi sudoku, joka on virheellinen eikä ratkea.
 
-Lisäksi ohjelman nopeutta on testattu sudukoilla, joissa on eri määrä tyhjiä ruutuja. Samoin ohjelmaa on testattu eri kokoisilla sudokuilla (9x9, 16x16, 25x25). Testiaineistossa on kuitenkin vain kuusi sudokua, jotka ovat suurempia kuin 9x9. 
+<img src="jacoco.png">
+
+Lisäksi ohjelman nopeutta on testattu monilla muilla sudukoilla, jotka ovat eri kokoisia ja joissa on eri määrä tyhjiä ruutuja. Testiaineistossa on kuitenkin vain kuusi sudokua, jotka ovat suurempia kuin 9x9. 
 
 9x9 testiaineisto on ladattu [Kjell Ericsonin sivuilta](https://kjell.haxx.se/sudoku/). 
 
@@ -26,7 +28,7 @@ Testiaineisto on kansiossa "testidata". Siellä on lisäksi tiedosto johon on li
 Testin voi toistaa esimerkiksi näin:
 
 ```
-java -jar target/Sudokusolver-0.9.jar testidata/3_100sudokua64.ss
+java -jar target/Sudokusolver-1.0.jar testidata/3_100sudokua64.ss
 ```
 
 ## Ohjelman toiminnan empiirinen testaus

@@ -43,6 +43,7 @@ public class AlgorithmX {
             System.out.println("  Haarautumiskohtia: " + twoBranches);
             System.out.println("  Läpikäytyjä haaroja joista ei löytynyt ratkaisua: " + falseBranches);
         }
+        
         // Luodaan vastaus
         fillGrid(completedGrid);
         time = (double) System.nanoTime() / 1000000 - time;
@@ -170,7 +171,6 @@ public class AlgorithmX {
         } else { // Tarjolla ei ole muita sarakkeita kuin sellaisia joissa on kaksi rivivaihtoehtoa
             twoBranches++;
             branchLevels[level] = 1;
-//            displayBranchLevels();
             if (showBranching && twoBranches % 10000 == 0) {
                 displayBranchLevelsAll();  // jos haarautumia tulee todella paljon, tulostetaan haarautumagraafia
             }
@@ -228,7 +228,6 @@ public class AlgorithmX {
             node = node.down;
             if (node != null) {
                 branchLevels[level] = 0;
-//                displayBranchLevels();
                 falseBranches++;
             }
         }
@@ -251,6 +250,9 @@ public class AlgorithmX {
         }
     }
     
+    /**
+     * Metodi tulostaa riville 170 ensimmäisen tason haarautumaa. 
+     */
     private static void displayBranchLevelsAll() {
         for (int i = 0; i < 170; i++) {
             if (branchLevels[i] == 1) {
@@ -262,6 +264,9 @@ public class AlgorithmX {
         System.out.println("");
     }
 
+    /**
+     * Metodi tulostaa niin monta tähtä kuin on sen hetkinen haarautumissyvyys. 
+     */
     private static void displayBranchLevels() {
         for (int i = 0; i < twoBranches - falseBranches; i++) {
             System.out.print(".");
