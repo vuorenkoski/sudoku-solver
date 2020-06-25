@@ -258,7 +258,7 @@ public class Main {
     
     private static void showHelp() {
         System.out.println("");
-        System.out.println("Käyttö: sudoku-solver [VALITSIMET] [TIEDOSTO]");
+        System.out.println("Käyttö: sudokusolver [VALITSIMET] [TIEDOSTO]");
         System.out.println("Valitsimet:");
         System.out.println("x - Käytä algorithm X");
         System.out.println("b - Käytä Brute-Force");
